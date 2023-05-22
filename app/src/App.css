@@ -1,0 +1,17 @@
+.App {
+  text-align: center;
+  display : flex;
+  height:auto;
+  overflow: hidden;
+  color: black;
+  background-color: black;
+  min-height: 100vh;
+ 
+  /*background-image: linear-gradient(79deg, #7439db, #C66FBC 48%, #F7944D);
+  background-size: cover;
+  background-repeat: repeat;*/
+
+}
+
+
+
