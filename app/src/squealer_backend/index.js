@@ -1,6 +1,6 @@
 const { MongoClient } = require('mongodb');
 
-const url = 'mongodb://127.0.0.1:27017'; // Replace with your MongoDB server information
+const url = 'mongodb://127.0.0.1:27017'; // Replace with your MongoDB server information (http://site222312.tw.cs.unibo.it/)
 const dbName = 'squealerdb'; // Replace with your database name
 
 async function connectToMongo() {
