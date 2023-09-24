@@ -1,11 +1,9 @@
- import {Navbar} from './Navbar';
- 
- 
- 
- export const Homepage = () =>{
+import { Navbar } from "./Navbar";
 
-return (
-    <Navbar/>
-);
-
-}
+export const Homepage = () => {
+  return (
+    <>
+      <Navbar />
+    </>
+  );
+};
