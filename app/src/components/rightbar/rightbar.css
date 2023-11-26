@@ -1,0 +1,92 @@
+.rightbar{
+    flex: 3;
+    position: sticky;
+    top: 71px;   
+    height: calc(100vh - 71px);
+    overflow: scroll;
+    background-color: #f5f5f5;
+    &::-webkit-scrollbar{
+        display: none;
+    }
+}
+
+.containerRB{
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+.itemRB{
+    -webkit-box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.09);
+    -moz-box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.09);
+    box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.09);
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: white;
+}
+
+.itemRB span{
+    color : gray;
+}
+
+.userRB{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px 0px;
+}
+
+.userInfoRB{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+}
+
+.userInfoRB img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.buttonsRB{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.buttonsRB button{
+    border: none;
+    padding: 5px;
+    color: white;
+    cursor: pointer;
+}
+
+.buttonsRB :first-child{
+    background-color: #5271ff;
+}
+
+.buttonsRB :last-child{
+    background-color: #f0544f;
+}
+
+
+.onlineRB {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: limegreen;
+    position: absolute;
+    top: 0;
+    left: 30px;
+}
+
+.onlineRB p{
+    color: black;
+}
+
+.onlineRB span {
+    font-weight: 500;
+    color: black;
+}
+

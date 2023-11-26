@@ -1,0 +1,49 @@
+.leftbar{
+    flex: 2;
+    position: sticky;
+    top: 71px;   
+    height: calc(100vh - 71px);
+    overflow: scroll;
+    &::-webkit-scrollbar{
+        display: none;
+    }
+    
+}
+
+.item img{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.item{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.menu{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    
+    
+}
+.menu span{
+    font-size: 14px;
+}
+
+
+.container{
+    padding: 20px;
+}
+
+hr{
+    margin: 20px 0px;
+    border : none;
+    height: 0.5px;
+    background-color: lightgray;
+}
+

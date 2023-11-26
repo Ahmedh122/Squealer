@@ -1,0 +1,105 @@
+.Share{
+    -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+    -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+    box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+    border-radius: 20px;
+    background-color: white;
+    color: black;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    margin-left: 30px;
+    margin-right: 30px;
+    margin-top:20px;
+    
+}
+
+.containerShare{
+    padding: 20px;
+}
+
+.middleShare{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    
+}
+
+.middleShare img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.middleShare input{
+    border: none;
+    outline: none;
+    padding: 20px 10px;
+    background-color: transparent;
+    width: 60%;
+    color: black;
+}
+
+.middleShare hr{
+    margin: 20px 0px;
+    border: none;
+    height: 0.5px;
+    background-color: lightgray;
+}
+
+.bottomShare{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.leftShare{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.itemShare{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.itemShare img{
+    height: 20px;
+}
+
+.itemShare span{
+    font-size: 12px;
+    color: gray;
+}
+
+.rightShare button{
+    border: none;
+    padding: 5px;
+    color: white;
+    cursor: pointer;
+    background-color: #5271ff;
+    border-radius: 3px;
+}
+
+.topShare{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    
+}
+
+.topShare button{
+    border: none;
+    padding: 5px;
+    color: white;
+    cursor: pointer;
+    background-color: #5271ff;
+    border-radius: 3px;
+
+}
