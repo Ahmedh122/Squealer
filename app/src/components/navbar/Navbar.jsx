@@ -29,8 +29,8 @@ const Navbar = () => {
       <div className='rightside'>
         <div className="user">
           <img src={currentUser.profilepic} alt="" />
-          <Link to="/channel/1" style={{textDecoration:'none', color :'#000'}}>
-          <span>{currentUser.name}</span>
+          <Link to= {`/profile/${currentUser._id}`} style={{textDecoration:'none', color :'#000'}}>
+          <span>{currentUser.username}</span>
           </Link>
         </div>
       </div>

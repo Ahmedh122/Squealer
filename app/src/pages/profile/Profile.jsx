@@ -9,18 +9,37 @@ import LanguageIcon from "@mui/icons-material/Language";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Posts from "../../components/posts/Posts"
+import { useContext } from "react";
+import { AuthContext } from "../../context/Authcontext";
+import { useQuery } from "react-query";
+import {makeRequest} from "../../axios";
+import { useLocation } from "react-router";
 
 const Profile = () => {
+
+  const userId = parseInt(useLocation().pathname.split("/")[2]);
+
+  const { currentUser } = useContext(AuthContext);
+  const { isLoading, data } = useQuery(["users"], () =>
+    makeRequest.get("/users/find/" + userId).then((res) => {
+      return res.data;
+    })
+  );
+
+  console.log(data);
+
   return (
     <div className="Profile">
+      {isLoading ? ( "loading...") :
+      ( <>
       <div className="imagesProfile">
         <img
-          src="https://images.pexels.com/photos/13440765/pexels-photo-13440765.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+          src={data.coverPic}
           alt=""
           className="coverProfile"
         />
         <img
-          src="https://images.pexels.com/photos/14028501/pexels-photo-14028501.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
+          src={data.profilePic}
           alt=""
           className="profilePicProfile"
         />
@@ -45,7 +64,7 @@ const Profile = () => {
             </a>
           </div>
           <div className="centerProfile">
-            <span>Jane Doe</span>
+            <span>{data.username}</span>
             <div className="infoProfile">
               <div className="itemProfile">
                 <PlaceIcon />
@@ -65,6 +84,8 @@ const Profile = () => {
         </div>
       <Posts/>
       </div>
+      </>
+    )};
     </div>
   );
 };

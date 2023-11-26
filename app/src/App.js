@@ -14,11 +14,17 @@ import {
 } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "./context/Authcontext";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 function App() {
+
   const {currentUser} = useContext(AuthContext);
+
+  const queryClient = new QueryClient();
+
   const Layout = ()=>{
     return(
+      <QueryClientProvider client={queryClient}>
       <div>
         <Navbar/>
         <div style={{display:'flex'}}>
@@ -29,6 +35,7 @@ function App() {
           <Rightbar/>
         </div>
       </div>
+      </QueryClientProvider>
     )
   }
 

@@ -11,7 +11,8 @@ const Register = () => {
     {
       username: '',
       email: '',
-      password: ''
+      password: '',
+      name: 'sdf'
     }
   );
 
