@@ -17,7 +17,7 @@ import { useLocation } from "react-router";
 
 const Profile = () => {
 
-  const userId = parseInt(useLocation().pathname.split("/")[2]);
+  const userId = useLocation().pathname.split("/")[2];
 
   const { currentUser } = useContext(AuthContext);
   const { isLoading, data } = useQuery(["users"], () =>

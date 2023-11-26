@@ -7,9 +7,9 @@ export const getUser = async (req, res) => {
   console.log("userid" , userId);
   try {
     
-     const objectId = mongoose.Types.ObjectId(userId);
+     
 
-     const user = await User.findOne({ _id: objectId });
+     const user = await User.findOne({ _id: userId });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
