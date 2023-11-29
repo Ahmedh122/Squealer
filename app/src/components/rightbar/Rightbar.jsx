@@ -42,10 +42,9 @@ const RightBar = () => {
                 alt=""
               />
               <p>
-                <span>Jane Doe</span> changed their cover picture
+                <span>Canale 1</span>
               </p>
             </div>
-            <span>1 min ago</span>
           </div>
           <div className="userRB">
             <div className="userInfoRB">
@@ -54,10 +53,9 @@ const RightBar = () => {
                 alt=""
               />
               <p>
-                <span>Jane Doe</span> changed their cover picture
+                <span>Canale 2</span>
               </p>
             </div>
-            <span>1 min ago</span>
           </div>
           <div className="userRB">
             <div className="userInfoRB">
@@ -66,10 +64,9 @@ const RightBar = () => {
                 alt=""
               />
               <p>
-                <span>Jane Doe</span> changed their cover picture
+                <span>Canale 3</span>
               </p>
             </div>
-            <span>1 min ago</span>
           </div>
           <div className="userRB">
             <div className="userInfoRB">
@@ -78,10 +75,9 @@ const RightBar = () => {
                 alt=""
               />
               <p>
-                <span>Jane Doe</span> changed their cover picture
+                <span>Canale 3</span>
               </p>
             </div>
-            <span>1 min ago</span>
           </div>
         </div>
         <div className="itemRB">
