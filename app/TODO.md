@@ -6,7 +6,7 @@
 - [ ] Come utente devo poter mandare un messaggio privato
 - [ ] Come utente devo poter mandare un messaggio ad un canale
 - [ ] Come utente devo poter mandare un messaggio pubblico
-- [ ] I messaggi possono contenere testo, link, immagini, posizioni.
+- [ ] I messaggi possono contenere testo, link, immagini, posizioni
 - [ ] Un immagine e una geolocazione costano 125 caratteri
 - [ ] Quota al giorno = D, quota alla settimana = 7D, quota al mese = 4W
 - [ ] I messaggi privati non hanno limiti di caratteri

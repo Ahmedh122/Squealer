@@ -19,7 +19,7 @@ const Share = () => {
         <hr />
         <div className="middleShare">
           <img
-            src={currentUser.profilepic}
+            src={currentUser.profilePic}
             alt=""
           />
           <input type="text" placeholder={`What's on your mind ?`} />
