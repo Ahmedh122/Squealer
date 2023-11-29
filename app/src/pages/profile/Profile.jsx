@@ -19,14 +19,14 @@ const Profile = () => {
 
   const userId = useLocation().pathname.split("/")[2];
 
-  const { currentUser } = useContext(AuthContext);
+ // const { currentUser } = useContext(AuthContext);
   const { isLoading, data } = useQuery(["users"], () =>
     makeRequest.get("/users/find/" + userId).then((res) => {
       return res.data;
     })
   );
 
-  console.log(data);
+  //console.log(data);
 
   return (
     <div className="Profile">

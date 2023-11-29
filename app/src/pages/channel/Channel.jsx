@@ -19,11 +19,6 @@ const Channel = () => {
           alt=""
           className="coverChannel"
         />
-        <img
-          src="https://images.pexels.com/photos/14028501/pexels-photo-14028501.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
-          alt=""
-          className="channelPicChannel"
-        />
       </div>
       <div className="channelContainerChannel">
         <div className="uInfoChannel">
@@ -45,7 +40,7 @@ const Channel = () => {
             </a>
           </div>
           <div className="centerChannel">
-            <span>Jane Doe</span>
+            <span>Canale 1</span>
             <div className="infoChannel">
               <div className="itemChannel">
                 <PlaceIcon />
@@ -56,7 +51,7 @@ const Channel = () => {
                 <span>lama.dev</span>
               </div>
             </div>
-            <button>follow</button>
+            <button>Subscribe</button>
           </div>
           <div className="rightChannel">
             <EmailOutlinedIcon />

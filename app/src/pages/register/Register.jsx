@@ -25,7 +25,9 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log('waiting...');
       await axios.post('http://localhost:8800/api/auth/register', inputs);
+      console.log('success');
     } catch (error) {
       setError(true);
     }
