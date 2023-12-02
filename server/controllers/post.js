@@ -10,17 +10,13 @@ export const getPosts = async (req, res) => {
 
     const userInfo = jwt.verify(token, "secretkey");
 
-    const posts = await (userId
-      ? Post.find({ userId })
-      : Post.find({
-          $or: [
-            { userId },
-            { userId: { $in: userInfo.id } }, // Include posts from followed users
-          ],
-        }).sort({ createdAt: -1 }));
+    const posts = await Post.find().sort({ createdAt: -1 }).populate({
+      path: "userId",
+      model: "User",
+      select: "username", // select the fields you want from the user
+    });
 
-
-
+    // Now, each post in the posts array will have the user information populated.
 
     return res.status(200).json(posts);
   } catch (error) {
