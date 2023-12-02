@@ -11,7 +11,7 @@ export const getLikes = async (req, res) => {
       return res.status(400).json({ error: "postId is required" });
     }
 
-    const likes = await Like.find({ postId: postId });
+    const likes = await Like.find({ _id: postId });
 
     const userIds = likes.map((like) => like.userId);
     return res.status(200).json(userIds);
