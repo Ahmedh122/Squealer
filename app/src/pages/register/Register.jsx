@@ -1,6 +1,6 @@
 import './register.css'
 //import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
 
@@ -28,8 +28,9 @@ const Register = () => {
       console.log('waiting...');
       await axios.post('http://localhost:8800/api/auth/register', inputs);
       console.log('success');
+      Navigate('/');
     } catch (error) {
-      setError(true);
+      setError(error.response.data);
     }
 
   }
@@ -46,7 +47,7 @@ const Register = () => {
           <input className='text' type="email" placeholder='Email' name='email' onChange={handleChange}/>
           
           <input className='text' type="password" placeholder='Password' name='password' onChange={handleChange}/>
-          
+          {error && error}
           <button className='logbutton' onClick={handleSubmit}>Register</button>
         </form>
         <p className='regtext'>Already have an account? <Link to='/login'><a className='regbutton'>Log in</a></Link></p>

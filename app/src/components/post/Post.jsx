@@ -27,7 +27,6 @@ const Post = ({ post }) => {
 
   const queryClient = useQueryClient();
   
-  //console.log(currentUser._id);
 
   const mutation = useMutation(
     (liked) => {
@@ -66,13 +65,13 @@ const Post = ({ post }) => {
       <div className="containerPost">
         <div className="userPost">
           <div className="userInfoPost">
-            <img src={"/upload/"+post.profilePic} alt="" />
+            <img src={post.userId.profilePic} alt="" />
             <div className="detailsPost">
               <Link
-                to={`/profile/${post.userId}`}
+                to={`/profile/${post.userId._id}`}
                 style={{ textDecoration: "none", color: "inherit" }}
               >
-                <span className="namePost">{post.name}</span>
+                <span className="namePost">{post.userId.username}</span>
               </Link>
               <span className="datePost">{moment(post.createdAt).fromNow()}</span>
             </div>
