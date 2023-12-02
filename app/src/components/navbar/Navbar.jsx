@@ -10,11 +10,24 @@ import { AuthContext } from '../../context/Authcontext';
 import { useQuery } from 'react-query';
 import { makeRequest } from '../../axios';
 import { useLocation } from 'react-router';
+import axios from 'axios';
+
 
 
 const Navbar = () => {
 
   const {currentUser} = useContext(AuthContext);
+  const { logout } = useContext(AuthContext);
+
+  const handleLogout = async () => {
+    //e.preventDefault();
+    try {
+      await logout();
+    } catch (err) {
+      console.error(err.response.data);
+    }
+  };
+
   return (
     <div className='Navbar'>
       <div className='leftside'>
@@ -32,7 +45,9 @@ const Navbar = () => {
         </div>
       </div>
       <div className='rightside'>
-        <SettingsIcon />
+        <div className="logoutbutton">
+          <button onClick={handleLogout}><SettingsIcon /></button>
+        </div>
         <div className="user">
           <img src={currentUser.profilePic} alt="" />
           <Link to={`/profile/${currentUser._id}`} style={{ textDecoration: 'none', color: '#000' }}>
