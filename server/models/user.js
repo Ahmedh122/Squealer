@@ -34,6 +34,14 @@ const userSchema = new mongoose.Schema({
   coverPic: {
     type: String,
   },
+  maxQuota: {
+    type: Number,
+    default: 1000,
+  },
+  currentQuota: {
+    type: Number,
+    default: 1000,
+  },
   // Add other fields as needed
 });
 

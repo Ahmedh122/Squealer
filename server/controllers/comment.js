@@ -5,7 +5,9 @@ import Comment from "../models/comment.js";
 export const getComments = async (req, res) => {
   try {
     const comments = await Comment.find({ postId: req.query.postId })
-      .populate("userId", "id name profilePic") // Populate user information
+      .populate( { path: "userId",
+      model: "User",
+      select: "username profilePic", } ) // Populate user information
       .sort({ createdAt: -1 });
 
     return res.status(200).json(comments);

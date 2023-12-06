@@ -5,7 +5,7 @@ import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Link } from "react-router-dom";
-//import Comments from "../comments/Comments";
+import Comments from "../comments/Comments";
 import { useState } from "react";
 import moment from "moment";
 import { useQuery, useQueryClient, useMutation } from "react-query";
@@ -113,6 +113,7 @@ const Post = ({ post }) => {
             Share
           </div>
         </div>
+        {commentOpen && <Comments postId={post._id} />}
       </div>
     </div>
   );
