@@ -30,14 +30,9 @@ const userSchema = new mongoose.Schema({
   },
   profilePic: {
     type: String,
-    default: "https://i.pinimg.com/222x/60/13/a3/6013a33f806d8d74f43ee2eb565ff4dc.jpg",
   },
   coverPic: {
     type: String,
-  },
-  quota: {
-    type: Number,
-    default: 9000,
   },
   // Add other fields as needed
 });

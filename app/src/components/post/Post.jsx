@@ -54,6 +54,7 @@ const Post = ({ post }) => {
 
   const handleLike = () => {
     mutation.mutate(data.includes(currentUser._id));
+    //console.log(data);
   };
 
   const handleDelete = () => {
@@ -65,6 +66,8 @@ const Post = ({ post }) => {
       <div className="containerPost">
         <div className="userPost">
           <div className="userInfoPost">
+            {post.userId && (
+            <>
             <img src={post.userId.profilePic} alt="" />
             <div className="detailsPost">
               <Link
@@ -75,6 +78,8 @@ const Post = ({ post }) => {
               </Link>
               <span className="datePost">{moment(post.createdAt).fromNow()}</span>
             </div>
+            </>
+            )}
           </div>
           <MoreHorizIcon onClick={() => setMenuOpen(!menuOpen)} />
           {menuOpen && post.userId === currentUser._id && (

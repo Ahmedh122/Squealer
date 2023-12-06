@@ -4,19 +4,16 @@ import mongoose from "mongoose";// Assuming you have a User model for MongoDB
 
 export const getUser = async (req, res) => {
   const userId = req.params.userId;
-  console.log("userid" , userId);
+  //console.log("userid" , userId);
   try {
-    
-     
-
      const user = await User.findOne({ _id: userId });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
     // Exclude sensitive information like password before sending the response
-    const { password, ...info } = user.toObject();
-    return res.json(info);
+    const { password, ...data } = user.toObject();
+    return res.json(data);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal Server Error" });

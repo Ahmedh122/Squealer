@@ -5,13 +5,13 @@ export const getLikes = async (req, res) => {
   try {
     const postId = req.query.postId;
 
-    console.log("Received postId:", postId);
+    //console.log("Received postId:", postId);
 
     if (!postId) {
       return res.status(400).json({ error: "postId is required" });
     }
 
-    const likes = await Like.find({ _id: postId });
+    const likes = await Like.find({ postId });
 
     const userIds = likes.map((like) => like.userId);
     return res.status(200).json(userIds);
@@ -33,7 +33,6 @@ export const addLike = async (req, res) => {
       userId: userInfo.id,
       postId: req.body.postId,
     });
-
     await newLike.save();
     return res.status(200).json("Post has been liked.");
   } catch (error) {

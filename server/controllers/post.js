@@ -10,15 +10,13 @@ export const getPosts = async (req, res) => {
 
     const userInfo = jwt.verify(token, "secretkey");
 
-    const posts = await Post.find()
-      .sort({ createdAt: -1 })
-      .populate({
-        path: "userId",
-        model: "User",
-        select: "username profilePic", // select the fields you want from the user
-      });
+    const posts = await Post.find().sort({ createdAt: -1 }).populate({
+      path: "userId",
+      model: "User",
+      select: "username profilePic",  // select the fields you want from the user
+    });
 
-    // Now, each post in the posts array will have the user information populated.
+    // Now, each post in the `posts` array will have the user information populated.
 
     return res.status(200).json(posts);
   } catch (error) {
@@ -38,7 +36,7 @@ export const addPost = async (req, res) => {
     const newPost = new Post({
       desc: req.body.desc,
       img: req.body.img,
-      userId: userInfo._id,
+      userId: userInfo.id,
     });
 
     await newPost.save();
