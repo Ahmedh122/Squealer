@@ -76,6 +76,12 @@ const Post = ({ post }) => {
               >
                 <span className="namePost">{post.userId.username}</span>
               </Link>
+              <Link
+                to={"/channel/:id"}
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <span className="namePost">s/post.channelId.name</span>
+              </Link>
               <span className="datePost">{moment(post.createdAt).fromNow()}</span>
             </div>
             </>

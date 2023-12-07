@@ -9,18 +9,51 @@ import LanguageIcon from "@mui/icons-material/Language";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Posts from "../../components/posts/Posts"
+//import { useContext } from "react";
+//import { AuthContext } from "../../context/Authcontext";
+import { useQuery } from "react-query";
+import {makeRequest} from "../../axios";
+import { useLocation } from "react-router";
+import React, { useState } from 'react';
 
 const Channel = () => {
+
+  const channelId = useLocation().pathname.split("/")[2];
+
+ // const { currentUser } = useContext(AuthContext);
+  const { isLoading, data } = useQuery(["channels"], () =>
+    makeRequest.get("/channels/find/" + channelId).then((res) => {
+      return res.data;
+    })
+  );
+
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handleButtonClick = () => {
+    setShowPopup(true);
+  };
+
+  const closePopup = () => {
+    setShowPopup(false);
+  };
+
   return (
     <div className="Channel">
+      {isLoading ? ( "loading...") :
+      ( <>
       <div className="imagesChannel">
         <img
-          src="https://images.pexels.com/photos/13440765/pexels-photo-13440765.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+          src=""
           alt=""
           className="coverChannel"
         />
+        <img
+          src=""
+          alt=""
+          className="profilePicChannel"
+        />
       </div>
-      <div className="channelContainerChannel">
+      <div className="profileContainerChannel">
         <div className="uInfoChannel">
           <div className="leftChannel">
             <a href="http://facebook.com">
@@ -40,7 +73,7 @@ const Channel = () => {
             </a>
           </div>
           <div className="centerChannel">
-            <span>Canale 1</span>
+            <span>{data.channelname}</span>
             <div className="infoChannel">
               <div className="itemChannel">
                 <PlaceIcon />
@@ -51,7 +84,13 @@ const Channel = () => {
                 <span>lama.dev</span>
               </div>
             </div>
-            <button>Subscribe</button>
+            <button onClick={handleButtonClick}>edit/follow</button>
+            {showPopup && (
+              <div className="popup">
+                  <span>ciao</span>
+                  <button onClick={closePopup}>Close</button> 
+              </div>
+            )}
           </div>
           <div className="rightChannel">
             <EmailOutlinedIcon />
@@ -60,6 +99,8 @@ const Channel = () => {
         </div>
       <Posts/>
       </div>
+      </>
+    )};
     </div>
   );
 };

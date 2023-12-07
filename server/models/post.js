@@ -16,6 +16,8 @@ const postSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User", // Assuming you have a User model
   },
+
+
 });
 
 const Post = mongoose.model("Post", postSchema);
