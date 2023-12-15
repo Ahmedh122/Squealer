@@ -18,21 +18,21 @@
     padding: 20px;
 }
 
-.middleShare{
+.topShare{
     display: flex;
     align-items: center;
     gap: 20px;
     
 }
 
-.middleShare img{
+.topShare img{
     width: 40px;
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
 }
 
-.middleShare input{
+.topShare input{
     border: none;
     outline: none;
     padding: 20px 10px;
@@ -41,7 +41,7 @@
     color: black;
 }
 
-.middleShare hr{
+.topShare hr{
     margin: 20px 0px;
     border: none;
     height: 0.5px;
@@ -102,4 +102,18 @@
     background-color: #5271ff;
     border-radius: 3px;
 
+}
+
+.middleShare{
+    margin: 10px 0px;
+    display: flex;
+}
+
+.middleShare img{
+    width: 100%;
+    object-fit: cover;
+    margin-top: 20px;
+    height: 100%;
+    max-height: 500px;
+    border-radius: 0%;
 }

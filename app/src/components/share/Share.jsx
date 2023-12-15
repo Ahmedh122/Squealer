@@ -6,33 +6,33 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../../context/Authcontext";
 import { useMutation, useQueryClient, } from 'react-query';
 import { makeRequest } from "../../axios";
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'; // Import Leaflet components
+import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'; // Import Marker and useMapEvents
+import "leaflet/dist/leaflet.css"
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import L from 'leaflet';
+
+let DefaultIcon = L.icon({
+  iconUrl: icon,
+  shadowUrl: iconShadow,
+  iconSize: [25, 41],  // size of the icon
+  shadowSize: [41, 41], // size of the shadow
+  iconAnchor: [12, 41], // point of the icon which will correspond to marker's location
+  shadowAnchor: [13, 41],  // the same for the shadow
+  popupAnchor: [1, -34] // point from which the popup should open relative to the iconAnchor
+});
+
+L.Marker.prototype.options.icon = DefaultIcon;
+
 
 const Share = () => {
 
-  // Add new state variable for location
-  const [location, setLocation] = useState(null);
-
-  // Add new state variable for showing the map modal
-  const [showMap, setShowMap] = useState(false);
-
-  // Function to handle "Add Place" click
-  const handleAddPlace = () => {
-    setShowMap(true);
-  };
-  // Function to handle map click
-  const MapEvents = () => {
-    const map = useMapEvents({
-      click: (e) => {
-        setLocation(e.latlng);
-        setShowMap(false);
-      },
-    });
-    return location ? <Marker position={location} /> : null;
-  };
-
   const [file, setFile] = useState(null);
   const [desc, setDesc] = useState("");
+  const [showMap, setShowMap] = useState(false);
+  const [markerPosition, setMarkerPosition] = useState(null);
+
+
 
   const upload = async () => {
     try {
@@ -44,7 +44,6 @@ const Share = () => {
       console.log(err)
     }
   }
-
 
   const { currentUser } = useContext(AuthContext);
   const queryClient = useQueryClient();
@@ -62,16 +61,34 @@ const Share = () => {
     e.preventDefault();
     let imgUrl = "";
     if (file) imgUrl = await upload();
-    mutation.mutate({ desc, img: imgUrl, location });
+    mutation.mutate({ desc, img: imgUrl });
     setDesc("");
     setFile(null);
-    setLocation(null);
+  };
+
+  //  MAPPA
+
+
+
+  const handleAddPlace = () => {
+    setShowMap(true);
+  };
+
+  // Component to handle map events
+  const MapEvents = () => {
+    const map = useMapEvents({
+      click: (e) => {
+        setMarkerPosition(e.latlng);
+      },
+    });
+
+    return null;
   };
 
   return (
     <div className="Share">
       <div className="containerShare">
-        <div className="middleShare">
+        <div className="topShare">
           <div className="leftShare">
             <img
               src={currentUser.profilePic}
@@ -82,11 +99,22 @@ const Share = () => {
               value={desc}
             />
           </div>
-          <div className="rightShare">
+          
+        </div>
+        <div className="middleShare">
 
-            {file && <img className="fileShare" alt="" src={URL.createObjectURL(file)} />}
+          {file && <img alt="" src={URL.createObjectURL(file)} />}
+          {showMap && (
+            <MapContainer  center={[44.49744930671936, 11.356477769914472]} zoom={20} style={{maxHeight:"500px", height: "100vh", width: "100%" }}>
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+              />
+              {markerPosition && <Marker position={markerPosition}/>}
+                <MapEvents />
+            </MapContainer>
+          )}
 
-          </div>
         </div>
         <hr />
         <div className="bottomShare">
@@ -99,15 +127,6 @@ const Share = () => {
                 <span>Add Image</span>
               </div>
             </label>
-            {showMap && (
-              <MapContainer center={[0, 0]} zoom={15} style={{ height: "300px", width: "100%" }} >
-                <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                />
-                <MapEvents />
-              </MapContainer>
-            )}
             <div className="itemShare" onClick={handleAddPlace}>
               <img src={Map} alt="" />
               <span>Add Place</span>
