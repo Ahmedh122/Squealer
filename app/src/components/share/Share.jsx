@@ -32,12 +32,16 @@ const Share = () => {
   const [showMap, setShowMap] = useState(false);
   const [markerPosition, setMarkerPosition] = useState(null);
 
-
-
   const upload = async () => {
     try {
       const formData = new FormData();
-      formData.append("file", file)
+      if (markerPosition) {
+        formData.append("file", JSON.stringify(markerPosition));
+      }
+      else {
+        formData.append("file", file)
+      }
+      console.log(formData.get("file"))
       const res = await makeRequest.post("/upload", formData);
       return res.data
     } catch (err) {
@@ -60,10 +64,13 @@ const Share = () => {
   const handleClick = async (e) => {
     e.preventDefault();
     let imgUrl = "";
+    let position = "";
     if (file) imgUrl = await upload();
-    mutation.mutate({ desc, img: imgUrl });
+    if (markerPosition) position = await upload();
+    mutation.mutate({ desc, img: imgUrl, markerPosition });
     setDesc("");
     setFile(null);
+    setMarkerPosition(null);
   };
 
   //  MAPPA
@@ -105,7 +112,7 @@ const Share = () => {
 
           {file && <img alt="" src={URL.createObjectURL(file)} />}
           {showMap && (
-            <MapContainer  center={[44.49744930671936, 11.356477769914472]} zoom={20} style={{maxHeight:"500px", height: "100vh", width: "100%" }}>
+            <MapContainer center={[44.49744930671936, 11.356477769914472]} zoom={15} style={{maxHeight:"500px", height: "100vh", width: "100%" }}>
               <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
