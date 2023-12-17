@@ -16,6 +16,10 @@ const postSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User", // Assuming you have a User model
   },
+  channelId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Channel", // Assuming you have a User model
+  },
 
 
 });

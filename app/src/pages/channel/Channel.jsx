@@ -26,7 +26,7 @@ const Channel = () => {
       return res.data;
     })
   );
-
+  console.log(data);
   const [showPopup, setShowPopup] = useState(false);
 
   const handleButtonClick = () => {

@@ -37,6 +37,7 @@ export const addPost = async (req, res) => {
       desc: req.body.desc,
       img: req.body.img,
       userId: userInfo.id,
+      //channelId: req.body.channelId,
     });
 
     await newPost.save();

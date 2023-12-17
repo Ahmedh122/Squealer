@@ -70,3 +70,22 @@ export const deleteChannel = async (req, res) => {
     return res.status(500).json(error.message || "Internal Server Error");
   }
 };
+
+
+export const getChannellist = async () => {
+  const channelId = req.params.channelId;
+  console.log("ciao");
+  //console.log("userid" , userId);
+  try {
+     const channel = await Channel.find();
+    if (!channel) {
+      return res.status(404).json({ message: "channel not found" });
+    }
+
+    // Exclude sensitive information like password before sending the response
+    return res.json(channel);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
