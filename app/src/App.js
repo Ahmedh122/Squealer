@@ -66,7 +66,7 @@ function App() {
           element: <Profile/>,
         },
         {
-          path: "/channel/:id",
+          path: "/channel/:channelname",
           element: <Channel/>,
         }
       ]

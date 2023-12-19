@@ -35,7 +35,7 @@ const Leftbar = () => {
       // Invalidate and refetch
       queryClient.invalidateQueries(["channels"]);
       // Redirect to the newly created channel
-      //navigate(`/channel/${data._id}`); // Use navigate instead of history.push
+      navigate(`/channel/${data.channelname}`, {replace: true}); // Use navigate instead of history.push
       console.log(data);
     },
   });
@@ -47,6 +47,8 @@ const Leftbar = () => {
     closePopup();
     
   };
+
+
 
 
   const [showPopup, setShowPopup] = useState(false);

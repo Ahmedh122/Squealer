@@ -3,9 +3,9 @@ import { getChannel, addChannel, deleteChannel, getChannellist } from "../contro
 
 const router = express.Router();
 
-router.get("/find/:channelId", getChannel);
+router.get("/find/:channelname", getChannel);
 router.post("/", addChannel);
 router.delete("/:id", deleteChannel);
-router.get("/",getChannellist);
+router.get("/", getChannellist);
 
 export default router;
