@@ -1,0 +1,20 @@
+.userRB{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px 0px;
+}
+
+.userInfoRB{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+}
+
+.userInfoRB img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}

@@ -35,8 +35,9 @@ const Leftbar = () => {
       // Invalidate and refetch
       queryClient.invalidateQueries(["channels"]);
       // Redirect to the newly created channel
-      navigate(`/channel/${data.channelname}`, {replace: true}); // Use navigate instead of history.push
-      console.log(data);
+     // navigate(`/channel/${data.channelname}`, {replace: true}); // Use navigate instead of history.push
+      window.location.href = `/channel/${data.channelname}`;
+  
     },
   });
 

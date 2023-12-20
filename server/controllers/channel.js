@@ -70,13 +70,18 @@ export const deleteChannel = async (req, res) => {
   }
 };
 
-export const getChannellist = async () => {
-  const channelId = req.params.channelId;
-  console.log("ciao");
-  //console.log("userid" , userId);
+export const getChannellist = async (req , res) => {
+
+ 
+
   try {
-    const channel = await Channel.find();
-    if (!channel) {
+
+
+
+  //console.log("userid" , userId);
+
+    const channel = await Channel.find({});
+    if (!channel || channel.length === 0) {
       return res.status(404).json({ message: "channel not found" });
     }
 
