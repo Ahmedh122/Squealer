@@ -1,7 +1,7 @@
 import "./rightbar.css";
 import { useQuery } from "react-query";
 import { makeRequest } from "../../axios";
-import Channels from "../rightbar/channel/Channel";
+import Channels from "../rightbar/channels/Channels";
 
 const RightBar = () => {
 

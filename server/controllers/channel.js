@@ -76,13 +76,11 @@ export const getChannellist = async (req , res) => {
 
   try {
 
-
-
   //console.log("userid" , userId);
 
     const channel = await Channel.find({});
     if (!channel || channel.length === 0) {
-      return res.status(404).json({ message: "channel not found" });
+      return res.status(404).json({ message: "channels not found" });
     }
 
     // Exclude sensitive information like password before sending the response

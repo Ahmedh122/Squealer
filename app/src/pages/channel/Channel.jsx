@@ -18,14 +18,17 @@ import React, { useState } from 'react';
 
 const Channel = () => {
 
+
   const channelname = useLocation().pathname.split("/")[2];
 
  // const { currentUser } = useContext(AuthContext);
+
   const { isLoading, data } = useQuery(["channels"], () =>
     makeRequest.get("/channels/find/" + channelname).then((res) => {
       return res.data;
     })
   );
+
 
   const [showPopup, setShowPopup] = useState(false);
 

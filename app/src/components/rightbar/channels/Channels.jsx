@@ -7,13 +7,13 @@ const Channels = () => {
  
   const { isLoading, error, data } = useQuery(["channels"], () =>
     makeRequest.get("/channels").then((res) => {
-        console.log(res.data);
+      console.log(res.data)
       return res.data;
     })
   );
 
   return (
-    <div>
+    <div className="channels">
       {error
         ? "Something went wrong!"
         : isLoading
