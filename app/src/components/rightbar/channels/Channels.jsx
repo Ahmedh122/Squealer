@@ -6,7 +6,6 @@ import { makeRequest } from "../../../axios";
 const Channels = () => {
   const { isLoading, error, data } = useQuery(["channels"], () =>
     makeRequest.get("/channels").then((res) => {
-      console.log(res.data);
       return res.data;
     })
   );

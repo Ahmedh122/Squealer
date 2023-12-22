@@ -12,81 +12,122 @@ import Posts from "../../components/posts/Posts"
 import { useContext } from "react";
 import { AuthContext } from "../../context/Authcontext";
 import { useQuery } from "react-query";
-import {makeRequest} from "../../axios";
+import { makeRequest } from "../../axios";
 import { useLocation } from "react-router";
+import { useMutation, useQueryClient } from "react-query";
+
 
 const Profile = () => {
 
   const userId = useLocation().pathname.split("/")[2];
 
- // const { currentUser } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
   const { isLoading, data } = useQuery(["users"], () =>
     makeRequest.get("/users/find/" + userId).then((res) => {
       return res.data;
     })
   );
 
+
+  const { isLoading: rIsLoading, data: relationshipData } = useQuery(
+    ["relationship"],
+    () =>
+      makeRequest.get("/relationships?followedUserId=" + userId).then((res) => {
+        return res.data;
+      })
+  );
+
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation(
+    (following) => {
+      if (following)
+        return makeRequest.delete("/relationships?userId=" + userId);
+      return makeRequest.post("/relationships", { userId });
+    },
+    {
+      onSuccess: () => {
+        // Invalidate and refetch
+        queryClient.invalidateQueries(["relationship"]);
+      },
+    }
+  );
+
+  const handleFollow = () => {
+    console.log(relationshipData.includes(currentUser._id));
+    mutation.mutate(relationshipData.includes(currentUser._id));
+  };
+
   //console.log(data);
 
   return (
     <div className="Profile">
-      {isLoading ? ( "loading...") :
-      ( <>
-      <div className="imagesProfile">
-        <img
-          src={data.coverPic}
-          alt=""
-          className="coverProfile"
-        />
-        <img
-          src={data.profilePic}
-          alt=""
-          className="profilePicProfile"
-        />
-      </div>
-      <div className="profileContainerProfile">
-        <div className="uInfoProfile">
-          <div className="leftProfile">
-            <a href="http://facebook.com">
-              <FacebookTwoToneIcon fontSize="large" />
-            </a>
-            <a href="http://facebook.com">
-              <InstagramIcon fontSize="large" />
-            </a>
-            <a href="http://facebook.com">
-              <TwitterIcon fontSize="large" />
-            </a>
-            <a href="http://facebook.com">
-              <LinkedInIcon fontSize="large" />
-            </a>
-            <a href="http://facebook.com">
-              <PinterestIcon fontSize="large" />
-            </a>
+      {isLoading ? ("loading...") :
+        (<>
+          <div className="imagesProfile">
+            <img
+              src={data.coverPic}
+              alt=""
+              className="coverProfile"
+            />
+            <img
+              src={data.profilePic}
+              alt=""
+              className="profilePicProfile"
+            />
           </div>
-          <div className="centerProfile">
-            <span>{data.username}</span>
-            <div className="infoProfile">
-              <div className="itemProfile">
-                <PlaceIcon />
-                <span>USA</span>
+          <div className="profileContainerProfile">
+            <div className="uInfoProfile">
+              <div className="leftProfile">
+                <a href="http://facebook.com">
+                  <FacebookTwoToneIcon fontSize="large" />
+                </a>
+                <a href="http://facebook.com">
+                  <InstagramIcon fontSize="large" />
+                </a>
+                <a href="http://facebook.com">
+                  <TwitterIcon fontSize="large" />
+                </a>
+                <a href="http://facebook.com">
+                  <LinkedInIcon fontSize="large" />
+                </a>
+                <a href="http://facebook.com">
+                  <PinterestIcon fontSize="large" />
+                </a>
               </div>
-              <div className="itemProfile">
-                <LanguageIcon />
-                <span>lama.dev</span>
-              </div>
+              <div className="centerProfile">
+                <span>{data.username}</span>
+                <div className="infoProfile">
+                  <div className="itemProfile">
+                    <PlaceIcon />
+                    <span>USA</span>
+                  </div>
+                  <div className="itemProfile">
+                    <LanguageIcon />
+                    <span>lama.dev</span>
+                  </div>
+                </div>
+                {rIsLoading ? (
+                  "loading"
+                ) : (
+                  < button onClick={handleFollow}>
+                {relationshipData.includes(currentUser._id)
+                  ? "Following"
+                  : "Follow"}
+              </button>
+                )}
             </div>
-            <button>follow</button>
+            <div className="rightProfile">
+              <EmailOutlinedIcon />
+              <MoreVertIcon />
+            </div>
           </div>
-          <div className="rightProfile">
-            <EmailOutlinedIcon />
-            <MoreVertIcon />
-          </div>
+          <Posts />
         </div>
-      <Posts/>
-      </div>
-      </>
-    )};
-    </div>
+    </>
+  )
+};
+    </div >
   );
 };
 
