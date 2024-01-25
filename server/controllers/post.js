@@ -1,8 +1,10 @@
 import jwt from "jsonwebtoken";
 import Post from "../models/post.js";
+import Relationship from "../models/relationship.js";
+import Subscription from "../models/subscription.js";
 
 export const getPosts = async (req, res) => {
-  const userId = req.query.userId;
+  const { userId, channelname } = req.query;
   const token = req.cookies.accessToken;
 
   try {
@@ -10,13 +12,53 @@ export const getPosts = async (req, res) => {
 
     const userInfo = jwt.verify(token, "secretkey");
 
-    const posts = await Post.find().sort({ createdAt: -1 }).populate({
+    let query;
+
+    if (userId !== "undefined") {
+      // If userId is defined, fetch posts for a specific user
+      query = {
+        userId: userId,
+      };
+    } else if (channelname !=="undefined") {
+      // If channelname is defined, fetch posts for a specific channel
+      query = {
+        channelname: channelname,
+      };
+    } else {
+      // If userId and channelname are not defined, fetch posts from followed users and channels
+      const userRelationships = await Relationship.find({
+        followerUserId: userInfo.id,
+      });
+
+      const followedUserIds = userRelationships.map(
+        (relationship) => relationship.followedUserId
+      );
+
+      const channelSubscriptions = await Subscription.find({
+        subscriberId: userInfo.id,
+      });
+
+      const followedChannelNames = channelSubscriptions.map(
+        (subscription) => subscription.channelname
+      );
+
+      // Include the user's own ID and channel subscriptions in the list
+      followedUserIds.push(userInfo.id);
+      followedChannelNames.push(userInfo.id);
+
+      query = {
+        $or: [
+          { userId: { $in: followedUserIds } },
+          { channelname: { $in: followedChannelNames } },
+        ],
+      };
+    }
+
+    const posts = await Post.find(query).sort({ createdAt: -1 }).populate({
       path: "userId",
       model: "User",
-      select: "username profilePic",  // select the fields you want from the user
+      select: "username profilePic",
     });
-
-    // Now, each post in the `posts` array will have the user information populated.
 
     return res.status(200).json(posts);
   } catch (error) {
@@ -24,7 +66,6 @@ export const getPosts = async (req, res) => {
     return res.status(500).json(error.message || "Internal Server Error");
   }
 };
-
 export const addPost = async (req, res) => {
   const token = req.cookies.accessToken;
 

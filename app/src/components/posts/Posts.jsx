@@ -3,14 +3,17 @@ import "./posts.css";
 import { useQuery } from "react-query";
 import { makeRequest } from "../../axios";
 
-const Posts = () => { 
-  //  console.log("e5dm 3asba", userId);
-  const { isLoading, error, data } = useQuery(["posts"], () =>
-    makeRequest.get("/posts").then((res) => {
+const Posts = ({userId, channelname}) => { 
 
-      return res.data;
-    })
-  );
+ const { isLoading, error, data } = useQuery(
+   ["posts", userId, channelname],
+   () =>
+     makeRequest
+       .get(`/posts?userId=${userId}&channelname=${channelname}`)
+       .then((res) => {
+         return res.data;
+       })
+ );
 
   return (
     <div className="posts">

@@ -111,11 +111,12 @@ const Channel = () => {
                 {rIsLoading ? (
                   "loading"
                 ) : (
-                  < button onClick={handleFollow}>
-                {subscriptionData && subscriptionData.includes(currentUser._id)
-                  ? "Following"
-                  : "Follow"}
-              </button>
+                  <button onClick={handleFollow}>
+                    {subscriptionData &&
+                    subscriptionData.includes(currentUser._id)
+                      ? "Following"
+                      : "Follow"}
+                  </button>
                 )}
                 {showPopup && (
                   <div className="popup">
@@ -130,7 +131,7 @@ const Channel = () => {
                 <Modal />
               </div>
             </div>
-            <Posts />
+            <Posts channelname={channelname} />
           </div>
         </>
       )}

@@ -62,19 +62,13 @@ const Profile = () => {
 
   return (
     <div className="Profile">
-      {isLoading ? ("loading...") :
-        (<>
+      {isLoading ? (
+        "loading..."
+      ) : (
+        <>
           <div className="imagesProfile">
-            <img
-              src={data.coverPic}
-              alt=""
-              className="coverProfile"
-            />
-            <img
-              src={data.profilePic}
-              alt=""
-              className="profilePicProfile"
-            />
+            <img src={data.coverPic} alt="" className="coverProfile" />
+            <img src={data.profilePic} alt="" className="profilePicProfile" />
           </div>
           <div className="profileContainerProfile">
             <div className="uInfoProfile">
@@ -110,24 +104,24 @@ const Profile = () => {
                 {rIsLoading ? (
                   "loading"
                 ) : (
-                  < button onClick={handleFollow}>
-                {relationshipData.includes(currentUser._id)
-                  ? "Following"
-                  : "Follow"}
-              </button>
+                  <button onClick={handleFollow}>
+                    {relationshipData.includes(currentUser._id)
+                      ? "Following"
+                      : "Follow"}
+                  </button>
                 )}
+              </div>
+              <div className="rightProfile">
+                <EmailOutlinedIcon />
+                <MoreVertIcon />
+              </div>
             </div>
-            <div className="rightProfile">
-              <EmailOutlinedIcon />
-              <MoreVertIcon />
-            </div>
+            <Posts userId={userId} />
           </div>
-          <Posts />
-        </div>
-    </>
-  )
-};
-    </div >
+        </>
+      )}
+      ;
+    </div>
   );
 };
 

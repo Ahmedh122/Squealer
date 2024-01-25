@@ -23,20 +23,20 @@ function App() {
   const queryClient = new QueryClient();
 
   const Layout = ()=>{
-    return(
+    return (
       <QueryClientProvider client={queryClient}>
-      <div>
-      <Navbar/>
-        <div style={{display:'flex'}}>
-          <Leftbar/>
-          <div style={{flex :"6"}}>
-          <Outlet/>
+        <div>
+          <Navbar />
+          <div style={{ display: "flex" }}>
+            <Leftbar />
+            <div style={{ flex: "6" }}>
+              <Outlet />
+            </div>
+            <Rightbar />
           </div>
-          <Rightbar/>
         </div>
-      </div>
       </QueryClientProvider>
-    )
+    );
   }
 
   const ProtectedRoute = ({ children }) => {
