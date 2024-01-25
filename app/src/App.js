@@ -26,7 +26,7 @@ function App() {
     return(
       <QueryClientProvider client={queryClient}>
       <div>
-        <Navbar/>
+      <Navbar/>
         <div style={{display:'flex'}}>
           <Leftbar/>
           <div style={{flex :"6"}}>

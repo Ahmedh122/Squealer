@@ -1,5 +1,6 @@
 .rightBar{
     flex: 3;
+    position: sticky;
     top: 71px;   
     height: calc(100vh - 71px);
     overflow: scroll;
@@ -21,7 +22,7 @@
     padding: 20px;
     margin-bottom: 20px;
     background-color: white;
-}
+}       
 
 .itemRB span{
     color : gray;

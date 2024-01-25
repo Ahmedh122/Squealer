@@ -25,14 +25,18 @@ export const addChannel = async (req, res) => {
 
     const userInfo = jwt.verify(token, "secretkey");
 
+    // Check if channel already exists
+    const existingChannel = await Channel.findOne({ channelname: req.body.channelname });
+    if (existingChannel) {
+      return res.status(409).json("Channel already exists!");
+    }
+
     const newChannel = new Channel({
       admin: userInfo.id,
       channelname: req.body.channelname,
       channelPic: req.body.chimg,
       coverPic: req.body.coverimg,
     });
-
-    // fetch the channel name and check if it already exists or not
 
     await newChannel.save();
 
@@ -54,12 +58,12 @@ export const deleteChannel = async (req, res) => {
 
     const userInfo = jwt.verify(token, "secretkey");
 
-    const deletedChannel = await Post.findOneAndDelete({
-      _id: req.params.id,
-      userId: userInfo.id,
+    const deleteChannel = await Channel.findOneAndDelete({
+      channelname: req.params.channelname,
+      admin: userInfo.id,
     });
 
-    if (deletedChannel) {
+    if (deleteChannel) {
       return res.status(200).json("Channel has been deleted.");
     } else {
       return res.status(403).json("You can delete only your Channel.");

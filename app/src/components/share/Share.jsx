@@ -41,7 +41,7 @@ const Share = () => {
       else {
         formData.append("file", file)
       }
-      //console.log(formData.get("file"))
+      console.log(formData.get("file"))
       const res = await makeRequest.post("/upload", formData);
       return res.data
     } catch (err) {
