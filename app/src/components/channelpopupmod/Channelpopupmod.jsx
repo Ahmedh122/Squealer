@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import "./channelpopup.css";
+import "./channelpopupmod.css";
 
 export default function Modal() {
   const [modal, setModal] = useState(false);

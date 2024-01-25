@@ -1,6 +1,5 @@
 .rightBar{
     flex: 3;
-    
     top: 71px;   
     height: calc(100vh - 71px);
     overflow: scroll;
@@ -76,9 +75,9 @@
     height: 12px;
     border-radius: 50%;
     background-color: limegreen;
-    position: absolute;
-    top: 0;
-    left: 30px;
+    position: relative;
+    top: -15px;
+    left: -32px;
 }
 
 .onlineRB p{

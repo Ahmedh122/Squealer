@@ -15,7 +15,7 @@ import { useQuery, useMutation,useQueryClient } from "react-query";
 import { makeRequest } from "../../axios";
 import { useLocation } from "react-router";
 import React, { useState } from "react";
-import Modal from "../../components/channelpopup/Channelpopup";
+import Modal from "../../components/channelpopupmod/Channelpopupmod";
 
 const Channel = () => {
   const channelname = useLocation().pathname.split("/")[2];
