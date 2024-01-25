@@ -15,6 +15,7 @@ import { useQuery, useMutation,useQueryClient } from "react-query";
 import { makeRequest } from "../../axios";
 import { useLocation } from "react-router";
 import React, { useState } from "react";
+import Modal from "../../components/channelpopup/Channelpopup";
 
 const Channel = () => {
   const channelname = useLocation().pathname.split("/")[2];
@@ -126,6 +127,7 @@ const Channel = () => {
               <div className="rightChannel">
                 <EmailOutlinedIcon />
                 <MoreVertIcon />
+                <Modal />
               </div>
             </div>
             <Posts />

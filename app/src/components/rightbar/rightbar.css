@@ -1,6 +1,6 @@
 .rightBar{
     flex: 3;
-    position: sticky;
+    
     top: 71px;   
     height: calc(100vh - 71px);
     overflow: scroll;
@@ -39,7 +39,7 @@
     display: flex;
     align-items: center;
     gap: 20px;
-    position: relative;
+    
 }
 
 .userInfoRB img{
