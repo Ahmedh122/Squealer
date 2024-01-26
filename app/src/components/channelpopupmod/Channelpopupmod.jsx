@@ -4,6 +4,16 @@ import "./channelpopupmod.css";
 
 export default function Modal() {
   const [modal, setModal] = useState(false);
+  const [channelname, setchannelname] = useState("");
+
+  const handleClick = async (e) => {
+    e.preventDefault();
+    //mutation.mutate({ channelname });
+    setchannelname("");
+    toggleModal();
+    
+  };
+
 
   const toggleModal = () => {
     setModal(!modal);
@@ -25,15 +35,18 @@ export default function Modal() {
         <div className="modal">
           <div onClick={toggleModal} className="overlay"></div>
           <div className="modal-content">
-            <h2>Hello Modal</h2>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident
-              perferendis suscipit officia recusandae, eveniet quaerat assumenda
-              id fugit, dignissimos maxime non natus placeat illo iusto!
-              Sapiente dolorum id maiores dolores? Illum pariatur possimus
-              quaerat ipsum quos molestiae rem aspernatur dicta tenetur. Sunt
-              placeat tempora vitae enim incidunt porro fuga ea.
-            </p>
+            <h2>Channel Costumization</h2>
+            <form>
+                  <input
+                    type="text"
+                    placeholder="Channel Name"
+                    onChange={(e) => setchannelname(e.target.value)}
+                    value={channelname}
+                  />
+                  <input type="text" placeholder="Channel Pic" />
+                  <input type="text" placeholder="Channel Cover" />
+                  <button onClick={handleClick}>Submit</button>
+            </form>
             <button className="close-modal" onClick={toggleModal}>
               CLOSE
             </button>

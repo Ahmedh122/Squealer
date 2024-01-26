@@ -19,27 +19,48 @@ const Post = ({ post }) => {
 
   const { currentUser } = useContext(AuthContext);
 
-  const { isLoading, error, data } = useQuery(["likes", post._id], () =>
-    makeRequest.get("/likes?postId=" + post._id).then((res) => {
+  const { isLoadinglikes, errorlikes, data:datalikes } = useQuery(["likes", post._id], () =>
+    makeRequest.get("/likes/getLike?postId=" + post._id).then((res) => {
       return res.data;
     })
   );
-
+  const { isLoadingdislikes, errordislikes, data:datadislikes } = useQuery(["dislikes", post._id], () =>
+    makeRequest.get("/likes/getDislike?postId=" + post._id).then((res) => {
+      return res.data;
+    })
+  );
   const queryClient = useQueryClient();
   
 
   const mutation = useMutation(
     (liked) => {
-      if (liked) return makeRequest.delete("/likes?postId=" + post._id);
-      return makeRequest.post("/likes", { postId: post._id });
+      if (liked) return makeRequest.delete("/likes/deleteLike?postId=" + post._id);
+      return makeRequest.post("/likes/addLike", { postId: post._id });
     },
     {
       onSuccess: () => {
         // Invalidate and refetch
         queryClient.invalidateQueries(["likes"]);
+        queryClient.invalidateQueries(["dislikes"]);
       },
     }
   );
+
+  const dislikemutation = useMutation(
+    (disliked) => {
+      if (disliked) return makeRequest.delete("/likes/deleteDislike?postId=" + post._id);
+      return makeRequest.post("/likes/addDislike", { postId: post._id});
+    },
+    {
+      onSuccess: () => {
+        // Invalidate and refetch
+        queryClient.invalidateQueries(["dislikes"]);
+        queryClient.invalidateQueries(["likes"]);
+      },
+    }
+  );
+
+
   const deleteMutation = useMutation(
     (postId) => {
       return makeRequest.delete("/posts/" + postId);
@@ -53,8 +74,13 @@ const Post = ({ post }) => {
   );
 
   const handleLike = () => {
-    mutation.mutate(data.includes(currentUser._id));
-    //console.log(data);
+    console.log('currentUser:', currentUser);
+    console.log('datalikes in handleLike:', datalikes);
+    mutation.mutate(datalikes.includes(currentUser._id));
+  };
+
+  const handleDislike = () => {
+    dislikemutation.mutate(datadislikes.includes(currentUser._id));
   };
 
   const handleDelete = () => {
@@ -98,25 +124,35 @@ const Post = ({ post }) => {
         </div>
         <div className="infoPost">
           <div className="itemPost">
-            {isLoading ? (
+            {isLoadinglikes ? (
               "loading"
-            ) : data.includes(currentUser._id) ? (
+            ) :datalikes?.includes(currentUser._id) ? (
               <FavoriteOutlinedIcon
-                style={{ color: "red" }}
+                style={{ color: "red"}}
                 onClick={handleLike}
               />
             ) : (
               <FavoriteBorderOutlinedIcon onClick={handleLike} />
             )}
-            {data?.length} Likes
+             
+            {datalikes?.length} Likes
+          </div>
+          <div className="itemPost">
+            {isLoadingdislikes ? (
+              "loading"
+            ) : datadislikes?.includes(currentUser._id) ? (
+              <FavoriteOutlinedIcon
+                style={{ color: "purple", rotate:"180deg"}}
+                onClick={handleDislike}
+              />
+            ) : (
+              <FavoriteBorderOutlinedIcon style={{rotate:"180deg"}} onClick={handleDislike} />
+            )}
+            {datadislikes?.length} Dislikes
           </div>
           <div className="itemPost" onClick={() => setCommentOpen(!commentOpen)}>
             <TextsmsOutlinedIcon />
             See Comments
-          </div>
-          <div className="itemPost">
-            <ShareOutlinedIcon />
-            Share
           </div>
         </div>
         {commentOpen && <Comments postId={post._id} />}

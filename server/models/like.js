@@ -11,6 +11,11 @@ const likeSchema = new mongoose.Schema({
     ref: "Post", // Assuming you have a Post model
     required: true,
   },
+  type: {
+    type: String,
+    enum: ["like", "dislike"],
+    required: true,
+  },
 });
 
 const Like = mongoose.model("Like", likeSchema);

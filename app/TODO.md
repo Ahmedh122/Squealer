@@ -7,6 +7,7 @@
 - [ ] Come utente devo poter mandare un post pubblico
 - [ ] I messaggi possono contenere testo, link, immagini,VIDEO, posizioni
 - [ ] Devo poter distinguere tra menzione e destinatario di un messaggio
+- [ ] gestione Quota
 
 ## High Priority (black)
 - [ ] Numero massimo di caratteri al giorno alla settimana e al mese per messaggi pubblici
