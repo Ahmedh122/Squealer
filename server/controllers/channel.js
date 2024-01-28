@@ -94,3 +94,38 @@ export const getChannellist = async (req , res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const modifyChannel = async (req, res) => {
+  console.log(req.body);
+  const token = req.cookies.accessToken;
+
+  try {
+    if (!token) return res.status(401).json("Not logged in!");
+    console.log("ciao");
+    const userInfo = jwt.verify(token, "secretkey");
+
+    const channel = await Channel.findOne({ channelname: req.body.channelname });
+    console.log(channel);
+    if (!channel) {
+      return res.status(404).json({ message: "channel not found" });
+    }
+
+    /*if (channel.admin !== userInfo.id) {
+      return res.status(403).json("You can modify only your channel.");
+    }*/
+
+    const updatedChannel = await Channel.findOneAndUpdate(
+      { channelname: req.body.channelname },
+      { $set: {channelname : req.body.channelname2 , coverPic : req.body.newcoverpic, channelPic : req.body.newchannelpic} },
+      { new: true }
+    );
+
+    return res.status(200).json({
+      message: "Channel has been updated.",
+      channelname: updatedChannel.channelname,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json(error.message || "Internal Server Error");
+  }
+}

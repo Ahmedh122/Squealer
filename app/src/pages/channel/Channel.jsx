@@ -74,8 +74,8 @@ const Channel = () => {
       ) : (
         <>
           <div className="imagesChannel">
-            <img src="" alt="" className="coverChannel" />
-            <img src="" alt="" className="profilePicChannel" />
+            <img src={data.coverPic} alt="" className="coverChannel" />
+            <img src={data.channelPic} alt="" className="profilePicChannel" />
           </div>
           <div className="profileContainerChannel">
             <div className="uInfoChannel">

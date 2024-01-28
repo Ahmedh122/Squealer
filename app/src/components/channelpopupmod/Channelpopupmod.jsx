@@ -1,15 +1,39 @@
 
 import React, { useState } from "react";
 import "./channelpopupmod.css";
+import { useMutation } from "react-query";
+import {makeRequest} from "../../axios";
+import { useLocation } from "react-router";
+import {useQueryClient } from "react-query";
+
 
 export default function Modal() {
   const [modal, setModal] = useState(false);
-  const [channelname, setchannelname] = useState("");
+  const channelname = useLocation().pathname.split("/")[2];
+  const [channelname2, setchannelname] = useState("");
+  const [newcoverpic, setcoverpic] = useState("");
+  const [newchannelpic, setchannelpic] = useState("");
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation(modifyChannel => {
+    return makeRequest.put("/channels",modifyChannel).then(res => res.data);
+  }, {
+    onSuccess: (data) => {
+      console.log(data);
+      queryClient.invalidateQueries(["channelName"]); 
+      window.location.href = `/channel/${data.channelname}`;
+      
+    },
+  });
 
   const handleClick = async (e) => {
     e.preventDefault();
-    //mutation.mutate({ channelname });
+    if(channelname2 !== ""){
+      mutation.mutate({channelname,channelname2,newchannelpic,newcoverpic});
+    }    
     setchannelname("");
+    setcoverpic("");
+    setchannelpic("");
     toggleModal();
     
   };
@@ -41,10 +65,18 @@ export default function Modal() {
                     type="text"
                     placeholder="Channel Name"
                     onChange={(e) => setchannelname(e.target.value)}
-                    value={channelname}
+                    value={channelname2}
                   />
-                  <input type="text" placeholder="Channel Pic" />
-                  <input type="text" placeholder="Channel Cover" />
+                  <input 
+                    type="text"
+                    placeholder="Channel Pic"
+                    onChange={(e) => setchannelpic(e.target.value)}
+                  />
+                  <input 
+                    type="text" 
+                    placeholder="Channel Cover"
+                    onChange={(e) => setcoverpic(e.target.value)} 
+                  />
                   <button onClick={handleClick}>Submit</button>
             </form>
             <button className="close-modal" onClick={toggleModal}>
