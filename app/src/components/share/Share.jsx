@@ -11,6 +11,8 @@ import "leaflet/dist/leaflet.css"
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import L from 'leaflet';
+import { useEffect } from "react";
+
 
 let DefaultIcon = L.icon({
   iconUrl: icon,
@@ -29,6 +31,7 @@ const Share = () => {
 
   const [file, setFile] = useState(null);
   const [desc, setDesc] = useState("");
+  const [randDesc,setrandDesc] = useState("");
   const [showMap, setShowMap] = useState(false);
   const [markerPosition, setMarkerPosition] = useState(null);
 
@@ -91,6 +94,18 @@ const Share = () => {
 
     return null;
   };
+
+  // TIMED POST (fare una mutation apposta??? ) FUNZIONA
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setrandDesc("I'm thinking about " + Math.floor(Math.random() * 100) + " things at the same time");
+      mutation.mutate({desc : randDesc});
+    }, 1800000 ); // 60000 milliseconds = 1 minute  
+  
+    // Clear the interval when the component is unmounted
+    return () => clearInterval(intervalId);
+  }, [mutation, randDesc]); // Dependencies
 
   return (
     <div className="Share">

@@ -68,12 +68,12 @@ export const getPosts = async (req, res) => {
 };
 export const addPost = async (req, res) => {
   const token = req.cookies.accessToken;
-
+  
   try {
     if (!token) return res.status(401).json("Not logged in!");
 
     const userInfo = jwt.verify(token, "secretkey");
-
+    console.log(userInfo.id);
     const newPost = new Post({
       desc: req.body.desc,
       img: req.body.img,
