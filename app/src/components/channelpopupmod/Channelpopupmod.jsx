@@ -62,22 +62,25 @@ export default function Modal() {
             <h2>Channel Costumization</h2>
             <form>
                   <input
+                    className="inputform"
                     type="text"
                     placeholder="Channel Name"
                     onChange={(e) => setchannelname(e.target.value)}
                     value={channelname2}
                   />
                   <input 
+                    className="inputform"
                     type="text"
                     placeholder="Channel Pic"
                     onChange={(e) => setchannelpic(e.target.value)}
                   />
-                  <input 
+                  <input
+                    className="inputform" 
                     type="text" 
                     placeholder="Channel Cover"
                     onChange={(e) => setcoverpic(e.target.value)} 
                   />
-                  <button onClick={handleClick}>Submit</button>
+                  <button className="test123" onClick={handleClick}>Submit</button>
             </form>
             <button className="close-modal" onClick={toggleModal}>
               CLOSE
