@@ -96,12 +96,10 @@ export const getChannellist = async (req , res) => {
 };
 
 export const modifyChannel = async (req, res) => {
-  console.log(req.body);
   const token = req.cookies.accessToken;
 
   try {
     if (!token) return res.status(401).json("Not logged in!");
-    console.log("ciao");
     const userInfo = jwt.verify(token, "secretkey");
 
     const channel = await Channel.findOne({ channelname: req.body.channelname });
@@ -109,10 +107,10 @@ export const modifyChannel = async (req, res) => {
     if (!channel) {
       return res.status(404).json({ message: "channel not found" });
     }
-
-    /*if (channel.admin !== userInfo.id) {
+    
+    if (channel.admin.toHexString() !== userInfo.id) {
       return res.status(403).json("You can modify only your channel.");
-    }*/
+    }
 
     const updatedChannel = await Channel.findOneAndUpdate(
       { channelname: req.body.channelname },

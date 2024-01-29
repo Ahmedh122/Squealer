@@ -78,7 +78,7 @@ const Channel = () => {
             <img src={data.channelPic} alt="" className="profilePicChannel" />
           </div>
           <div className="profileContainerChannel">
-            <div className="uInfoChannel">
+            <div className="uInfoChannel" style={{marginTop : "20px"}}>
               <div className="leftChannel">
                 <a href="http://facebook.com">
                   <FacebookTwoToneIcon fontSize="large" />

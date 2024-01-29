@@ -10,6 +10,7 @@ import { makeRequest } from '../../axios';
 import { useContext } from 'react';
 import { AuthContext } from '../../context/Authcontext';
 import { useNavigate } from 'react-router-dom';
+import Modal from '../channelpopupcreate/Channelpopupcreate';
 
 
 
@@ -89,23 +90,8 @@ const Leftbar = () => {
           <div className="item">
             <img src={Impostazioni} alt="" />
 
-            <button onClick={handleButtonClick}>Create Channel</button>
-            {showPopup && (
-              <div className="popup">
-                <form>
-                  <input
-                    type="text"
-                    placeholder="Channel Name"
-                    onChange={(e) => setchannelname(e.target.value)}
-                    value={channelname}
-                  />
-                  <input type="text" placeholder="Channel Pic" />
-                  <input type="text" placeholder="Channel CoverPic" />
-                  <button onClick={handleClick}>Create</button>
-                </form>
-                <button onClick={closePopup}>Close</button>
-              </div>
-            )}
+            <span>Impostazioni</span>
+            
 
 
           </div>

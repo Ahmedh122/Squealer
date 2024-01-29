@@ -52,7 +52,7 @@ export default function Modal() {
   return (
     <>
       <button onClick={toggleModal} className="btn-modal">
-        Open
+        Modify
       </button>
 
       {modal && (

@@ -15,6 +15,7 @@ import { useQuery } from "react-query";
 import { makeRequest } from "../../axios";
 import { useLocation } from "react-router";
 import { useMutation, useQueryClient } from "react-query";
+import Modal from "../../components/channelpopupcreate/Channelpopupcreate";
 
 
 const Profile = () => {
@@ -114,6 +115,7 @@ const Profile = () => {
               <div className="rightProfile">
                 <EmailOutlinedIcon />
                 <MoreVertIcon />
+                <Modal />
               </div>
             </div>
             <Posts userId={userId} />
