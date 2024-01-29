@@ -11,6 +11,7 @@ import relationshipRoutes from "./routes/relationships.js";
 import channelRoutes from "./routes/channels.js"
 import authRoutes from "./routes/auth.js";
 import subscriptionRoutes from "./routes/subscriptions.js";
+import searchRoutes from "./routes/search.js";
 
 const app = express();
 
@@ -51,6 +52,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/relationships", relationshipRoutes);
 app.use("/api/channels", channelRoutes);
 app.use("/api/subscriptions", subscriptionRoutes);
+app.use("/api/search", searchRoutes); 
+
 
 const PORT = 8800;
 
