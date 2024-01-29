@@ -30,7 +30,10 @@ export default function Modal() {
     e.preventDefault();
     if(channelname2 !== ""){
       mutation.mutate({channelname,channelname2,newchannelpic,newcoverpic});
-    }    
+    } 
+    else{
+      mutation.mutate({channelname,channelname,newchannelpic,newcoverpic});
+    }
     setchannelname("");
     setcoverpic("");
     setchannelpic("");

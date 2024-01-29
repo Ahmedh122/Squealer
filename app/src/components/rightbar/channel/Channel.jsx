@@ -11,7 +11,7 @@ const Channel = ({ channel }) => {
       {channel && (
         <>
           <div className="userInfoRB">
-            <img src="" alt="" />
+            <img src={channel.channelPic} alt="" />
             <p>
               <span
                 onClick={() => redirectToChannel(channel.channelname)}
