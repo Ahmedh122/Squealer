@@ -79,40 +79,35 @@ const Navbar = () => {
             {isLoading
               ? "Loading"
               : datasearch
-                .filter((entry) => {
-                  const entryName = entry.channelname || entry.username;
-                  return value && entryName.startsWith(value);
-                })
-                .map((entry) => (
-                  <div className="dropdownrow" key={entry._id}>
-                    <img src={entry.profilePic} alt="" />
-                    <div className="info">
-                      {entry.channelname ? (
-                        <span
-                          onClick={() => redirectToChannel(entry.channelname)}
-                          style={{
-                            cursor: "pointer",
-                            textDecoration: "none",
-                            color: "inherit",
-                          }}
-                        >
-                          §{entry.channelname}
-                        </span>
-                      ) : (
-                        <span
-                          onClick={() => redirectToProfile(entry._id)}
-                          style={{
-                            cursor: "pointer",
-                            textDecoration: "none",
-                            color: "inherit",
-                          }}
-                        >
-                          @{entry.username}
-                        </span>
-                      )}
+                  .filter((entry) => {
+                    const entryName = entry.channelname || entry.username;
+                    return value && entryName.startsWith(value);
+                  })
+                  .map((entry) => (
+                    <div className="dropdownrow" key={entry._id}>
+                      <div className="info">
+                        {entry.channelname ? (
+                          <>
+                            <div
+                              onClick={() =>
+                                redirectToChannel(entry.channelname)
+                              }
+                            >
+                              <img src={"/upload/" + entry.channelPic} alt="" />
+                              <span>§{entry.channelname}</span>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div onClick={() => redirectToProfile(entry._id)}>
+                              <img src={entry.profilePic} alt="" />
+                              <span>@{entry.username}</span>
+                            </div>
+                          </>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
           </div>
         </div>
       </div>
@@ -125,12 +120,18 @@ const Navbar = () => {
         </div>
         <div className="user">
           <img src={currentUser.profilePic} alt="" />
-          <Link
-            to={`/profile/${currentUser._id}`}
-            style={{ textDecoration: "none", color: "#000" }}
+          <span
+            onClick={(e) =>
+              (window.location.href = `/profile/${currentUser._id}`)
+            }
+            style={{
+              cursor: "pointer",
+              textDecoration: "none",
+              color: "inherit",
+            }}
           >
-            <span>{currentUser.username}</span>
-          </Link>
+            {currentUser.username}
+          </span>
         </div>
       </div>
     </div>

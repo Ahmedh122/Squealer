@@ -127,24 +127,27 @@ const Post = ({ post }) => {
         <div className="userPost">
           <div className="userInfoPost">
             {post.userId && (
-            <>
-            <img src={post.userId.profilePic} alt="" />
-            <div className="detailsPost">
-              <Link
-                to={`/profile/${post.userId._id}`}
-                style={{ textDecoration: "none", color: "inherit" }}
-              >
-                <span className="namePost">{post.userId.username}</span>
-              </Link>
-              <Link
-                to={"/channel/:id"}
-                style={{ textDecoration: "none", color: "inherit" }}
-              >
-                <span className="namePost">s/post.channelId.name</span>
-              </Link>
-              <span className="datePost">{moment(post.createdAt).fromNow()}</span>
-            </div>
-            </>
+              <>
+                <img src={post.userId.profilePic} alt="" />
+                <div className="detailsPost">
+                  <Link
+                    to={`/profile/${post.userId._id}`}
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    <span className="namePost">{post.userId.username}</span>
+                  </Link>
+                  {post.channelname!=="" &&(
+                  <Link
+                    to={`/channel/${post.channelname}`}
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    <span className="namePost">§ {post.channelname}</span>
+                  </Link>)}
+                  <span className="datePost">
+                    {moment(post.createdAt).fromNow()}
+                  </span>
+                </div>
+              </>
             )}
           </div>
           <MoreHorizIcon onClick={() => setMenuOpen(!menuOpen)} />
@@ -168,15 +171,14 @@ const Post = ({ post }) => {
           <div className="itemPost">
             {isLoadinglikes ? (
               "loading"
-            ) :datalikes?.includes(currentUser._id) ? (
+            ) : datalikes?.includes(currentUser._id) ? (
               <FavoriteOutlinedIcon
-                style={{ color: "red"}}
+                style={{ color: "red" }}
                 onClick={handleLike}
               />
             ) : (
               <FavoriteBorderOutlinedIcon onClick={handleLike} />
             )}
-             
             {datalikes?.length} Likes
           </div>
           <div className="itemPost">
@@ -184,15 +186,21 @@ const Post = ({ post }) => {
               "loading"
             ) : datadislikes?.includes(currentUser._id) ? (
               <FavoriteOutlinedIcon
-                style={{ color: "purple", rotate:"180deg"}}
+                style={{ color: "purple", rotate: "180deg" }}
                 onClick={handleDislike}
               />
             ) : (
-              <FavoriteBorderOutlinedIcon style={{rotate:"180deg"}} onClick={handleDislike} />
+              <FavoriteBorderOutlinedIcon
+                style={{ rotate: "180deg" }}
+                onClick={handleDislike}
+              />
             )}
             {datadislikes?.length} Dislikes
           </div>
-          <div className="itemPost" onClick={() => setCommentOpen(!commentOpen)}>
+          <div
+            className="itemPost"
+            onClick={() => setCommentOpen(!commentOpen)}
+          >
             <TextsmsOutlinedIcon />
             See Comments
           </div>

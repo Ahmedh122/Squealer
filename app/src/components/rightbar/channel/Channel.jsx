@@ -10,16 +10,12 @@ const Channel = ({ channel }) => {
     <div className="userRB">
       {channel && (
         <>
-          <div className="userInfoRB">
-            <img src={channel.channelPic} alt="" />
-            <p>
-              <span
-                onClick={() => redirectToChannel(channel.channelname)}
-                style={{ cursor: "pointer", textDecoration: "none", color: "inherit" }}
-              >
-                {channel.channelname}
-              </span>
-            </p>
+          <div
+            className="userInfoRB"
+            onClick={() => redirectToChannel(channel.channelname)}
+          >
+            <img src={"/upload/" + channel.channelPic} alt="" />
+            <p>{channel.channelname}</p>
           </div>
         </>
       )}

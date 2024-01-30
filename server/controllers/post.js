@@ -67,6 +67,7 @@ export const getPosts = async (req, res) => {
   }
 };
 export const addPost = async (req, res) => {
+ 
   const token = req.cookies.accessToken;
   
   
@@ -82,7 +83,7 @@ export const addPost = async (req, res) => {
       userId: userInfo.id,
       position: position,
       
-      //channelId: req.body.channelId,
+      channelname: req.body.channelname || "",
     });
     console.log(newPost,"AAAAAAAAAAAAAAAAA");  
     await newPost.save();

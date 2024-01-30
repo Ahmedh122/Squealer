@@ -27,7 +27,7 @@ let DefaultIcon = L.icon({
 L.Marker.prototype.options.icon = DefaultIcon;
 
 
-const Share = () => {
+const Share = ({channelname}) => {
 
   const [file, setFile] = useState(null);
   const [desc, setDesc] = useState("");
@@ -56,7 +56,8 @@ const Share = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation(newPost => {
-    return makeRequest.post("/posts", newPost)
+    return makeRequest.post(
+      "/posts",newPost);
   }, {
     onSuccess: () => {
       // Invalidate and refetch
@@ -70,7 +71,12 @@ const Share = () => {
     let position = "";
     if (file) imgUrl = await upload();
     //if (markerPosition) position = await upload();
-    mutation.mutate({ desc, img: imgUrl, position : markerPosition  });
+    mutation.mutate({
+      desc,
+      img: imgUrl,
+      position : markerPosition,
+      channelname,
+     });
     setDesc("");
     setFile(null);
     setMarkerPosition(null);
@@ -116,7 +122,7 @@ const Share = () => {
               src={currentUser.profilePic}
               alt=""
             />
-            <input type="text" placeholder={`What's on your mind ${currentUser.name}?`}
+            <input type="text" placeholder={`What's on your mind ${currentUser.username}?`}
               onChange={(e) => setDesc(e.target.value)}
               value={desc}
             />

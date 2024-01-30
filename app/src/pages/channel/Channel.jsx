@@ -11,11 +11,12 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Posts from "../../components/posts/Posts";
 import { useContext } from "react";
 import { AuthContext } from "../../context/Authcontext";
-import { useQuery, useMutation,useQueryClient } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import { makeRequest } from "../../axios";
 import { useLocation } from "react-router";
 import React, { useState } from "react";
 import Modal from "../../components/channelpopupmod/Channelpopupmod";
+import Share from "../../components/share/Share";
 
 const Channel = () => {
   const channelname = useLocation().pathname.split("/")[2];
@@ -23,7 +24,7 @@ const Channel = () => {
   const { currentUser } = useContext(AuthContext);
 
   const { isLoading, data } = useQuery(["channelName"], () =>
-    makeRequest.get("/channels/find/" + channelname).then((res) => {
+    makeRequest.get(`/channels/find/${channelname}`).then((res) => {
       return res.data;
     })
   );
@@ -41,29 +42,35 @@ const Channel = () => {
   const { isLoading: rIsLoading, data: subscriptionData } = useQuery(
     ["subscription"],
     () =>
-      makeRequest.get("/subscriptions?channelname=" + channelname).then((res) => {
-        return res.data;
-      })
+      makeRequest
+        .get(`/subscriptions/subscriberslist?channelname=${channelname}`)
+        .then((res) => {
+          return res.data;
+        })
   );
 
   const queryClient = useQueryClient();
 
   const mutation = useMutation(
     (subscribed) => {
-      if (subscribed)
-        return makeRequest.delete("/subscriptions?channelname=" + channelname);
-      return makeRequest.post("/subscriptions", { channelname });
+      const endpoint = subscribed
+        ? `/subscriptions?channelname=${channelname}`
+        : "/subscriptions";
+      return subscribed
+        ? makeRequest.delete(endpoint)
+        : makeRequest.post(endpoint, { channelname });
     },
     {
       onSuccess: () => {
         // Invalidate and refetch
         queryClient.invalidateQueries(["subscription"]);
+        queryClient.invalidateQueries(["subscriptions"]); 
       },
     }
   );
 
   const handleFollow = () => {
-    console.log(subscriptionData.includes(currentUser._id));
+    
     mutation.mutate(subscriptionData.includes(currentUser._id));
   };
 
@@ -74,11 +81,19 @@ const Channel = () => {
       ) : (
         <>
           <div className="imagesChannel">
-            <img src={data.coverPic} alt="" className="coverChannel" />
-            <img src={data.channelPic} alt="" className="profilePicChannel" />
+            <img
+              src={`/upload/${data.coverPic}`}
+              alt=""
+              className="coverChannel"
+            />
+            <img
+              src={`/upload/${data.channelPic}`}
+              alt=""
+              className="profilePicChannel"
+            />
           </div>
           <div className="profileContainerChannel">
-            <div className="uInfoChannel" style={{marginTop : "20px"}}>
+            <div className="uInfoChannel" style={{ marginTop: "20px" }}>
               <div className="leftChannel">
                 <a href="http://facebook.com">
                   <FacebookTwoToneIcon fontSize="large" />
@@ -105,18 +120,22 @@ const Channel = () => {
                   </div>
                   <div className="itemChannel">
                     <LanguageIcon />
-                    <span>lama.dev</span>
+                    <span>{data.admin.username}</span>
                   </div>
                 </div>
                 {rIsLoading ? (
                   "loading"
                 ) : (
-                  <button onClick={handleFollow}>
-                    {subscriptionData &&
-                    subscriptionData.includes(currentUser._id)
-                      ? "Following"
-                      : "Follow"}
-                  </button>
+                  <>
+                    {data.admin._id !== currentUser._id && (
+                      <button onClick={handleFollow}>
+                        {subscriptionData &&
+                        subscriptionData.includes(currentUser._id)
+                          ? "Following"
+                          : "Follow"}
+                      </button>
+                    )}
+                  </>
                 )}
                 {showPopup && (
                   <div className="popup">
@@ -128,14 +147,17 @@ const Channel = () => {
               <div className="rightChannel">
                 <EmailOutlinedIcon />
                 <MoreVertIcon />
-                <Modal />
+                {data.admin._id === currentUser._id && <Modal />}
               </div>
             </div>
+            {(currentUser._id === data.admin._id ||
+              subscriptionData.includes(currentUser._id)) && (
+              <Share channelname={channelname} />
+            )}
             <Posts channelname={channelname} />
           </div>
         </>
       )}
-      ;
     </div>
   );
 };

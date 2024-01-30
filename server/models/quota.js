@@ -7,9 +7,16 @@ const quotaSchema = new mongoose.Schema({
     required: true,
   },
   quota: {
-    type: int ,
+    type: Number,
     required: true,
+    default: 1000
   },
+
+  maxquota: {
+    type: Number,
+    required: true,
+    default:1000
+  } 
 });
 
 const Like = mongoose.model("Like", likeSchema);

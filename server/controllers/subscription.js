@@ -17,6 +17,24 @@ export const getSubscriptions = async (req, res) => {
   }
 };
 
+export const getSubscription = async (req, res) => {
+  try {
+    const userId = req.query.userId; // Use userId instead of currentUser._id
+    const subscriptions = await Subscription.find({
+      subscriberId: userId,
+    });
+
+    const channelnames = subscriptions.map(
+      (relationship) => relationship.channelname
+    );
+
+    return res.status(200).json(channelnames);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json(error.message || "Internal Server Error");
+  }
+};
+
 export const addSubscription = async (req, res) => {
   const token = req.cookies.accessToken;
 
