@@ -69,8 +69,8 @@ const Share = () => {
     let imgUrl = "";
     let position = "";
     if (file) imgUrl = await upload();
-    if (markerPosition) position = await upload();
-    mutation.mutate({ desc, img: imgUrl, markerPosition });
+    //if (markerPosition) position = await upload();
+    mutation.mutate({ desc, img: imgUrl, position : markerPosition  });
     setDesc("");
     setFile(null);
     setMarkerPosition(null);

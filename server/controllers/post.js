@@ -69,18 +69,22 @@ export const getPosts = async (req, res) => {
 export const addPost = async (req, res) => {
   const token = req.cookies.accessToken;
   
+  
   try {
     if (!token) return res.status(401).json("Not logged in!");
 
     const userInfo = jwt.verify(token, "secretkey");
     console.log(userInfo.id);
+    const position = req.body.position ? { lat: req.body.position.lat, lng: req.body.position.lng } : null;
     const newPost = new Post({
       desc: req.body.desc,
       img: req.body.img,
       userId: userInfo.id,
+      position: position,
+      
       //channelId: req.body.channelId,
     });
-
+    console.log(newPost,"AAAAAAAAAAAAAAAAA");  
     await newPost.save();
 
     return res.status(200).json("Post has been created.");

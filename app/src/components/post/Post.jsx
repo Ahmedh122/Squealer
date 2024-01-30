@@ -12,6 +12,25 @@ import { useQuery, useQueryClient, useMutation } from "react-query";
 import { makeRequest } from "../../axios";
 import { useContext } from "react";
 import { AuthContext } from "../../context/Authcontext";
+import L from 'leaflet';
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import { MapContainer, TileLayer, Marker } from 'react-leaflet'; // Import Marker and useMapEvents
+import "leaflet/dist/leaflet.css"
+import { useEffect } from "react";
+
+
+let DefaultIcon = L.icon({
+  iconUrl: icon,
+  shadowUrl: iconShadow,
+  iconSize: [25, 41],  // size of the icon
+  shadowSize: [41, 41], // size of the shadow
+  iconAnchor: [12, 41], // point of the icon which will correspond to marker's location
+  shadowAnchor: [13, 41],  // the same for the shadow
+  popupAnchor: [1, -34] // point from which the popup should open relative to the iconAnchor
+});
+
+L.Marker.prototype.options.icon = DefaultIcon;
 
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
@@ -87,6 +106,21 @@ const Post = ({ post }) => {
     deleteMutation.mutate(post._id);
   };
 
+
+  // MAPPA
+  const [showMap, setShowMap] = useState(false);
+  const [markerPosition, setMarkerPosition] = useState(null);
+
+  const handleShowmap = () => {
+    if (post.position !== null) {
+      setMarkerPosition(post.position);
+      setShowMap(true);
+    }
+  };
+  useEffect(() => {
+    handleShowmap();
+  }, [post]); 
+
   return (
     <div className="Post">
       <div className="containerPost">
@@ -120,6 +154,14 @@ const Post = ({ post }) => {
         </div>
         <div className="contentPost">
           <p>{post.desc}</p>
+          {showMap && false && markerPosition && <Marker position={markerPosition}/> &&(
+            <MapContainer center={post.position} zoom={15} style={{maxHeight:"500px", height: "100vh", width: "100%" }}>
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+              />
+            </MapContainer>
+          )}
           <img src={"/upload/" + post.img} alt="" />
         </div>
         <div className="infoPost">

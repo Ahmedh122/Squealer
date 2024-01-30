@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 const postSchema = new mongoose.Schema({
   desc: {
     type: String,
-    required: true,
   },
   img: {
     type: String,
@@ -23,6 +22,10 @@ const postSchema = new mongoose.Schema({
   channelname: {
     type: String,
     ref: "Channel", // Assuming you have a User model
+  },
+  position: {
+    lat : {type: Number},
+    lng : {type: Number},
   },
 });
 
