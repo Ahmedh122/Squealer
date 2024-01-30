@@ -21,10 +21,15 @@ export const getUser = async (req, res) => {
 };
 export const updateUser = async (req, res) => {
   const token = req.cookies.accessToken;
-  if (!token) return res.status(401).json("Not authenticated!");
+
+  if (!token) {
+    return res.status(401).json("Not authenticated!");
+  }
 
   jwt.verify(token, "secretkey", async (err, userInfo) => {
-    if (err) return res.status(403).json("Token is not valid!");
+    if (err) {
+      return res.status(403).json("Token is not valid!");
+    }
 
     const userId = userInfo.id;
 
@@ -35,24 +40,45 @@ export const updateUser = async (req, res) => {
         return res.status(404).json({ message: "User not found" });
       }
 
-      // Check if the user updating is the owner of the profile
       if (user.id !== userId) {
         return res.status(403).json("You can update only your profile!");
       }
 
-      // Update user fields
-      user.name = req.body.name || user.name;
-      user.city = req.body.city || user.city;
-      user.website = req.body.website || user.website;
-      user.profilePic = req.body.profilePic || user.profilePic;
-      user.coverPic = req.body.coverPic || user.coverPic;
+      const updateFields = {};
 
-      await user.save();
+      if (req.body.username2) {
+        updateFields.username = req.body.username2;
+      }
 
-      return res.json("Updated!");
+      if (req.body.newprpic) {
+        updateFields.profilePic = req.body.newprpic;
+      }
+
+      if (req.body.newprcover) {
+        updateFields.coverPic = req.body.newprcover;
+      }
+
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { $set: updateFields },
+        { new: true }
+      );
+
+      return res.status(200).json({
+        message: "User has been updated.",
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        profilePic: updatedUser.profilePic,
+        coverPic: updatedUser.coverPic,
+      });
+      
+
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: "Internal Server Error" });
     }
   });
 };
+
+
+

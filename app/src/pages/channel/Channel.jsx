@@ -137,12 +137,7 @@ const Channel = () => {
                     )}
                   </>
                 )}
-                {showPopup && (
-                  <div className="popup">
-                    <span>ciao</span>
-                    <button onClick={closePopup}>Close</button>
-                  </div>
-                )}
+            
               </div>
               <div className="rightChannel">
                 <EmailOutlinedIcon />

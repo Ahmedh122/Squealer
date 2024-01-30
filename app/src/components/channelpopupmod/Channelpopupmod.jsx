@@ -1,10 +1,12 @@
 
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "./channelpopupmod.css";
 import { useMutation } from "react-query";
 import {makeRequest} from "../../axios";
 import { useLocation } from "react-router";
 import {useQueryClient } from "react-query";
+import Image from "../../assets/img.png";
+import { AuthContext } from "../../context/Authcontext";
 
 
 export default function Modal() {
@@ -14,6 +16,18 @@ export default function Modal() {
   const [newcoverpic, setcoverpic] = useState("");
   const [newchannelpic, setchannelpic] = useState("");
   const queryClient = useQueryClient();
+   const { currentUser } = useContext(AuthContext);
+   const uploadFile = async (file) => {
+     try {
+       const formData = new FormData();
+       formData.append("file", file);
+       const res = await makeRequest.post("/upload", formData);
+       return res.data;
+     } catch (err) {
+       console.log(err);
+       return null;
+     }
+   };
 
   const mutation = useMutation(modifyChannel => {
     return makeRequest.put("/channels",modifyChannel).then(res => res.data);
@@ -26,19 +40,34 @@ export default function Modal() {
     },
   });
 
+
   const handleClick = async (e) => {
     e.preventDefault();
-    if(channelname2 !== ""){
-      mutation.mutate({channelname,channelname2,newchannelpic,newcoverpic});
-    } 
-    else{
-      mutation.mutate({channelname,channelname,newchannelpic,newcoverpic});
+    let newchannelPic = "";
+    let newcoverPic = "";
+    if (newchannelpic) newchannelPic = await uploadFile(newchannelpic);
+    if (newcoverpic) newcoverPic = await uploadFile(newcoverpic);
+
+    if (channelname2 !== "") {
+      setchannelname(channelname2); // Set the new channel name
+      mutation.mutate({
+        channelname,
+        channelname2,
+        newchannelpic: newchannelPic,
+        newcoverpic: newcoverPic,
+      });
+    } else {
+      mutation.mutate({
+        channelname,
+        newchannelpic: newchannelPic,
+        newcoverpic: newcoverPic,
+      });
     }
+
     setchannelname("");
     setcoverpic("");
     setchannelpic("");
     toggleModal();
-    
   };
 
 
@@ -55,35 +84,54 @@ export default function Modal() {
   return (
     <>
       <button onClick={toggleModal} className="btn-modal">
-        Modify
+        edit channel
       </button>
 
       {modal && (
         <div className="modal">
           <div onClick={toggleModal} className="overlay"></div>
           <div className="modal-content">
-            <h2>Channel Costumization</h2>
+            <h2>Channel Customization</h2>
             <form>
-                  <input
-                    className="inputform"
-                    type="text"
-                    placeholder="Channel Name"
-                    onChange={(e) => setchannelname(e.target.value)}
-                    value={channelname2}
-                  />
-                  <input 
-                    className="inputform"
-                    type="text"
-                    placeholder="Channel Pic"
-                    onChange={(e) => setchannelpic(e.target.value)}
-                  />
-                  <input
-                    className="inputform" 
-                    type="text" 
-                    placeholder="Channel Cover"
-                    onChange={(e) => setcoverpic(e.target.value)} 
-                  />
-                  <button className="test123" onClick={handleClick}>Submit</button>
+              <input
+                className="inputform"
+                type="text"
+                placeholder="Channel Name"
+                onChange={(e) => setchannelname(e.target.value)}
+              
+              />
+
+              {/* Channel Pic */}
+              <div className="image-icon">
+                <span>channel picture </span>
+                <label htmlFor="channelpic">
+                  <img src={Image} alt="Channel Pic" />
+                </label>
+                <input
+                  type="file"
+                  id="channelpic"
+                  style={{ display: "none" }}
+                  onChange={(e) => setchannelpic(e.target.files[0])}
+                />
+              </div>
+
+              {/* Cover Pic */}
+              <div className="image-icon">
+                <span>channel cover </span>
+                <label htmlFor="coverpic">
+                  <img src={Image} alt="Cover Pic" />
+                </label>
+                <input
+                  type="file"
+                  id="coverpic"
+                  style={{ display: "none" }}
+                  onChange={(e) => setcoverpic(e.target.files[0])}
+                />
+              </div>
+
+              <button className="test123" onClick={handleClick}>
+                Submit
+              </button>
             </form>
             <button className="close-modal" onClick={toggleModal}>
               CLOSE

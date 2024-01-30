@@ -128,7 +128,7 @@ const Post = ({ post }) => {
           <div className="userInfoPost">
             {post.userId && (
               <>
-                <img src={post.userId.profilePic} alt="" />
+                <img src={`/upload/${post.userId.profilePic}`} alt="" />
                 <div className="detailsPost">
                   <Link
                     to={`/profile/${post.userId._id}`}
