@@ -16,6 +16,7 @@ import { makeRequest } from "../../axios";
 import { useLocation } from "react-router";
 import { useMutation, useQueryClient } from "react-query";
 import Modal from "../../components/channelpopupcreate/Channelpopupcreate";
+import Share from "../../components/share/Share";
 
 
 const Profile = () => {
@@ -105,24 +106,28 @@ const Profile = () => {
                 {rIsLoading ? (
                   "loading"
                 ) : (
-                  <button onClick={handleFollow}>
-                    {relationshipData.includes(currentUser._id)
-                      ? "Following"
-                      : "Follow"}
-                  </button>
+                  <>
+                    {userId !== currentUser._id && (
+                      <button onClick={handleFollow}>
+                        {relationshipData.includes(currentUser._id)
+                          ? "Following"
+                          : "Follow"}
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
               <div className="rightProfile">
                 <EmailOutlinedIcon />
                 <MoreVertIcon />
-                <Modal />
+                {userId === currentUser._id && <Modal />}
               </div>
             </div>
+            <Share/>
             <Posts userId={userId} />
           </div>
         </>
       )}
-      ;
     </div>
   );
 };

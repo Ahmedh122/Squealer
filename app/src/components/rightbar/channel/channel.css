@@ -1,5 +1,6 @@
 .userRB{
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: space-between;
     margin: 20px 0px;
@@ -18,3 +19,4 @@
     border-radius: 50%;
     object-fit: cover;
 }
+

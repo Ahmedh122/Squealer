@@ -3,9 +3,13 @@ import Channel from "../models/channel.js";
 
 export const getChannel = async (req, res) => {
   const channelname = req.params.channelname;
-  //console.log("userid" , userId);
+  
   try {
-    const channel = await Channel.findOne({ channelname: channelname });
+    const channel = await Channel.findOne({ channelname: channelname }).populate({
+      path: "admin",
+      model:"User",
+      select:"username",
+    });
     if (!channel) {
       return res.status(404).json({ message: "channel not found" });
     }
@@ -32,13 +36,15 @@ export const addChannel = async (req, res) => {
     }
 
     const newChannel = new Channel({
-      admin: userInfo.id,
+      admin: req.body.admin,
       channelname: req.body.channelname,
-      channelPic: req.body.chimg,
-      coverPic: req.body.coverimg,
+      channelPic: req.body.channelpic,
+      coverPic: req.body.coverpic,
     });
 
     await newChannel.save();
+
+   
 
     return res.status(200).json({
       message: "Channel has been created.",
@@ -83,9 +89,9 @@ export const getChannellist = async (req , res) => {
   //console.log("userid" , userId);
 
     const channel = await Channel.find({});
-    if (!channel || channel.length === 0) {
-      return res.status(404).json({ message: "channels not found" });
-    }
+      if (!channel || channel.length === 0) {
+        return res.json([]); // Return an empty array
+      }
 
     // Exclude sensitive information like password before sending the response
     return res.json(channel);

@@ -1,101 +1,148 @@
-
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./channelpopupcreate.css";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { makeRequest } from "../../axios";
-import { useLocation } from "react-router";
-import { useQueryClient } from "react-query";
-
+import Image from "../../assets/img.png";
+import { AuthContext } from "../../context/Authcontext";
 
 export default function Modal() {
-    const [modal, setModal] = useState(false);
+  const [modal, setModal] = useState(false);
+  const [channelpic, setChannelpic] = useState(null);
+  const [coverpic, setCoverpic] = useState(null);
+  const [channelname, setChannelname] = useState("");
+  const queryClient = useQueryClient();
+  const { currentUser, } = useContext(AuthContext);
+  const uploadFile = async (file) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await makeRequest.post("/upload", formData);
+      return res.data;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  };
 
 
-    const [coverpic, setcoverpic] = useState("");
-    const [channelpic, setchannelpic] = useState("");
-    const [channelname, setchannelname] = useState("");
-
-    const queryClient = useQueryClient();
-
-
-    const mutation = useMutation(newChannel => {
-        return makeRequest.post("/channels", newChannel).then(res => res.data);
-    }, {
+    const mutation = useMutation(
+      newChannel => {
+        return makeRequest
+          .post("/channels", newChannel)
+          .then((res) => res.data);
+      },
+      {
         onSuccess: (data) => {
-            // Invalidate and refetch
-            queryClient.invalidateQueries(["channels"]);
-            // Redirect to the newly created channel
-            // navigate(`/channel/${data.channelname}`, {replace: true}); // Use navigate instead of history.push
-            window.location.href = `/channel/${data.channelname}`;
-
+          queryClient.invalidateQueries(["channels"]);
+          window.location.href = `/channel/${data.channelname}`;
         },
-    });
-
-    const handleClick = async (e) => {
-        e.preventDefault();
-        if (channelname === "") {
-            mutation.mutate({ channelname : "newchannel", channelpic, coverpic }); 
-        }
-        else{
-            mutation.mutate({ channelname, channelpic, coverpic});
-        }
-        setchannelname("");
-        setchannelpic("");
-        setcoverpic("");
-        toggleModal();
-
-    };
+      }
+    );
 
 
-    const toggleModal = () => {
-        setModal(!modal);
-    };
 
-    if (modal) {
-        document.body.classList.add('active-modal')
+  const handleClick = async (e) => {
+    e.preventDefault();
+    let channelPic = "";
+    let coverPic = "";
+    if(channelpic) channelPic = await uploadFile(channelpic);
+    if(coverpic) coverPic = await uploadFile(coverpic);
+    if (channelname === "") {
+      mutation.mutate({
+        channelname: "newchannel",
+        channelpic: channelPic,
+        coverpic: coverPic,
+        admin: currentUser._id,
+      });
     } else {
-        document.body.classList.remove('active-modal')
+      mutation.mutate({
+        channelname,
+        channelpic: channelPic,
+        coverpic: coverPic,
+        admin : currentUser._id,
+      });
     }
 
-    return (
-        <>
-            <button onClick={toggleModal} className="btn-modal">
-                Create Channel
-            </button>
+    setChannelname("");
+    setChannelpic(null);
+    setCoverpic(null);
+    toggleModal();
+  };
 
-            {modal && (
-                <div className="modal">
-                    <div onClick={toggleModal} className="overlay"></div>
-                    <div className="modal-content">
-                        <h2>Channel Costumization</h2>
-                        <form>
-                            <input
-                                className="inputform"
-                                type="text"
-                                placeholder="Channel Name"
-                                onChange={(e) => setchannelname(e.target.value)}
-                                value={channelname}
-                            />
-                            <input
-                                className="inputform"
-                                type="text"
-                                placeholder="Channel Pic"
-                                onChange={(e) => setchannelpic(e.target.value)}
-                            />
-                            <input
-                                className="inputform"
-                                type="text"
-                                placeholder="Channel Cover"
-                                onChange={(e) => setcoverpic(e.target.value)}
-                            />
-                            <button className="test123" onClick={handleClick}>Submit</button>
-                        </form>
-                        <button className="close-modal" onClick={toggleModal}>
-                            CLOSE
-                        </button>
-                    </div>
-                </div>
-            )}
-        </>
-    );
+  const handleFileChange = (file, setFile) => {
+    if (file) {
+      setFile(file);
+    }
+  };
+
+  const toggleModal = () => {
+    setModal(!modal);
+  };
+
+  if (modal) {
+    document.body.classList.add("active-modal");
+  } else {
+    document.body.classList.remove("active-modal");
+  }
+
+  return (
+    <>
+      <button onClick={toggleModal} className="btn-modal">
+        Create Channel
+      </button>
+
+      {modal && (
+        <div className="modal">
+          <div onClick={toggleModal} className="overlay"></div>
+          <div className="modal-content">
+            <h2>Channel Customization</h2>
+            <form>
+              <input
+                className="inputform"
+                type="text"
+                placeholder="Channel Name"
+                onChange={(e) => setChannelname(e.target.value)}
+                value={channelname}
+              />
+
+              {/* Channel Pic */}
+              <div className="image-icon">
+                <span>channel picture  </span>
+                <label htmlFor="channelpic">
+                  <img src={Image} alt="Channel Pic" />
+                </label>
+                <input
+                  type="file"
+                  id="channelpic"
+                  style={{ display: "none" }}
+                  onChange={(e) => setChannelpic(e.target.files[0])}
+                />
+              </div>
+
+              {/* Cover Pic */}
+              <div className="image-icon">
+                <span>channel cover  </span>
+                <label htmlFor="coverpic">
+                  <img src={Image} alt="Cover Pic" />
+                </label>
+                <input
+                  type="file"
+                  id="coverpic"
+                  style={{ display: "none" }}
+                  onChange={(e) => setCoverpic(e.target.files[0])}
+                />
+              </div>
+
+              <button className="test123" onClick={handleClick}>
+                Submit
+              </button>
+            </form>
+            <button className="close-modal" onClick={toggleModal}>
+              CLOSE
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
 }

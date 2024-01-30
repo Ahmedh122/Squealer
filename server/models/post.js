@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const postSchema = new mongoose.Schema({
   desc: {
     type: String,
-    required: true,
+    //required: true,
   },
   img: {
     type: String,
