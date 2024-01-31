@@ -11,6 +11,7 @@ const Channel = ({ channel }) => {
       {channel && (
         <>
           <div
+            style={{cursor : "pointer"}}
             className="userInfoRB"
             onClick={() => redirectToChannel(channel.channelname)}
           >

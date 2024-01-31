@@ -80,6 +80,7 @@ const Share = ({channelname}) => {
     setDesc("");
     setFile(null);
     setMarkerPosition(null);
+    setShowMap(false)
   };
 
   //  MAPPA
@@ -106,6 +107,7 @@ const Share = ({channelname}) => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setrandDesc("I'm thinking about " + Math.floor(Math.random() * 100) + " things at the same time");
+      console.log(randDesc);
       mutation.mutate({desc : randDesc});
     }, 1800000 ); // 60000 milliseconds = 1 minute  
   
