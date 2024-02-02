@@ -80,6 +80,7 @@ const Share = ({channelname}) => {
     setDesc("");
     setFile(null);
     setMarkerPosition(null);
+    setShowMap(false)
   };
 
   //  MAPPA
@@ -119,37 +120,41 @@ const Share = ({channelname}) => {
       <div className="containerShare">
         <div className="topShare">
           <div className="leftShare">
-            <img
-              src={currentUser.profilePic}
-              alt=""
-            />
-            <input type="text" placeholder={`What's on your mind ${currentUser.username}?`}
+            <img src={`/upload/${currentUser.profilePic}`} alt="" />
+            <input
+              type="text"
+              placeholder={`What's on your mind ${currentUser.username}?`}
               onChange={(e) => setDesc(e.target.value)}
               value={desc}
             />
           </div>
-          
         </div>
         <div className="middleShare">
-
           {file && <img alt="" src={URL.createObjectURL(file)} />}
           {showMap && (
-            <MapContainer center={[44.49744930671936, 11.356477769914472]} zoom={15} style={{maxHeight:"500px", height: "100vh", width: "100%" }}>
+            <MapContainer
+              center={[44.49744930671936, 11.356477769914472]}
+              zoom={15}
+              style={{ maxHeight: "500px", height: "100vh", width: "100%" }}
+            >
               <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
               />
-              {markerPosition && <Marker position={markerPosition}/>}
-                <MapEvents />
+              {markerPosition && <Marker position={markerPosition} />}
+              <MapEvents />
             </MapContainer>
           )}
-
         </div>
         <hr />
         <div className="bottomShare">
           <div className="leftShare">
-            <input type="file" id="file" style={{ display: "none" }}
-              onChange={(e) => setFile(e.target.files[0])} />
+            <input
+              type="file"
+              id="file"
+              style={{ display: "none" }}
+              onChange={(e) => setFile(e.target.files[0])}
+            />
             <label htmlFor="file">
               <div className="itemShare">
                 <img src={Image} alt="" />

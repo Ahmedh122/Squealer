@@ -17,6 +17,7 @@ import { useLocation } from "react-router";
 import { useMutation, useQueryClient } from "react-query";
 import Modal from "../../components/channelpopupcreate/Channelpopupcreate";
 import Share from "../../components/share/Share";
+import Predit from "../../components/profileEdit/Profileedit";
 
 
 const Profile = () => {
@@ -69,8 +70,12 @@ const Profile = () => {
       ) : (
         <>
           <div className="imagesProfile">
-            <img src={data.coverPic} alt="" className="coverProfile" />
-            <img src={data.profilePic} alt="" className="profilePicProfile" />
+            <img
+              src={`/upload/${data.coverPic}`}
+              alt=""
+              className="coverProfile"
+            />
+            <img src={`/upload/${data.profilePic}`} alt="" className="profilePicProfile" />
           </div>
           <div className="profileContainerProfile">
             <div className="uInfoProfile">
@@ -116,6 +121,7 @@ const Profile = () => {
                     )}
                   </>
                 )}
+                {userId === currentUser._id && <Predit />}
               </div>
               <div className="rightProfile">
                 <EmailOutlinedIcon />
@@ -123,7 +129,7 @@ const Profile = () => {
                 {userId === currentUser._id && <Modal />}
               </div>
             </div>
-            <Share/>
+            <Share />
             <Posts userId={userId} />
           </div>
         </>

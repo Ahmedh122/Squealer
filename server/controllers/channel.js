@@ -108,19 +108,35 @@ export const modifyChannel = async (req, res) => {
     if (!token) return res.status(401).json("Not logged in!");
     const userInfo = jwt.verify(token, "secretkey");
 
-    const channel = await Channel.findOne({ channelname: req.body.channelname });
+    const channel = await Channel.findOne({
+      channelname: req.body.channelname,
+    });
     console.log(channel);
     if (!channel) {
       return res.status(404).json({ message: "channel not found" });
     }
-    
+
     if (channel.admin.toHexString() !== userInfo.id) {
       return res.status(403).json("You can modify only your channel.");
     }
 
+    const updateFields = {};
+
+    if (req.body.channelname2) {
+      updateFields.channelname = req.body.channelname2;
+    }
+
+    if (req.body.newcoverpic) {
+      updateFields.coverPic = req.body.newcoverpic;
+    }
+
+    if (req.body.newchannelpic) {
+      updateFields.channelPic = req.body.newchannelpic;
+    }
+
     const updatedChannel = await Channel.findOneAndUpdate(
       { channelname: req.body.channelname },
-      { $set: {channelname : req.body.channelname2 , coverPic : req.body.newcoverpic, channelPic : req.body.newchannelpic} },
+      { $set: updateFields },
       { new: true }
     );
 
@@ -132,4 +148,4 @@ export const modifyChannel = async (req, res) => {
     console.error(error);
     return res.status(500).json(error.message || "Internal Server Error");
   }
-}
+};

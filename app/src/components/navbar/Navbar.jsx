@@ -119,7 +119,7 @@ const Navbar = () => {
           </button>
         </div>
         <div className="user">
-          <img src={currentUser.profilePic} alt="" />
+          <img src={`/upload/${currentUser.profilePic}`} alt="" />
           <span
             onClick={(e) =>
               (window.location.href = `/profile/${currentUser._id}`)
