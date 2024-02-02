@@ -12,6 +12,8 @@ export default function Modal() {
   const [channelname, setChannelname] = useState("");
   const queryClient = useQueryClient();
   const { currentUser, } = useContext(AuthContext);
+
+  
   const uploadFile = async (file) => {
     try {
       const formData = new FormData();
@@ -95,7 +97,7 @@ export default function Modal() {
         <div className="modal">
           <div onClick={toggleModal} className="overlay"></div>
           <div className="modal-content">
-            <h2>Channel Customization</h2>
+            <h2>Channel Creation</h2>
             <form>
               <input
                 className="inputform"
