@@ -13,11 +13,10 @@ const Channel = ({ channel }) => {
           <div
             style={{cursor : "pointer"}}
             className="userInfoRB"
-            style={{ cursor: "pointer" }}
             onClick={() => redirectToChannel(channel.channelname)}
           >
             <img src={"/upload/" + channel.channelPic} alt="" />
-            <p style={{cursor : "pointer"}}>{channel.channelname}</p>
+            <p>{channel.channelname}</p>
           </div>
         </>
       )}

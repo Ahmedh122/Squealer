@@ -68,7 +68,7 @@ const Share = ({channelname}) => {
   const handleClick = async (e) => {
     e.preventDefault();
     let imgUrl = "";
-    //let position = "";
+    let position = "";
     if (file) imgUrl = await upload();
     //if (markerPosition) position = await upload();
     mutation.mutate({
@@ -109,7 +109,7 @@ const Share = ({channelname}) => {
       setrandDesc("I'm thinking about " + Math.floor(Math.random() * 100) + " things at the same time");
       console.log(randDesc);
       mutation.mutate({desc : randDesc});
-    }, 300000 ); // 60000 milliseconds = 1 minute  
+    }, 1800000 ); // 60000 milliseconds = 1 minute  
   
     // Clear the interval when the component is unmounted
     return () => clearInterval(intervalId);

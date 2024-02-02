@@ -206,7 +206,7 @@ const Post = ({ post }) => {
               "loading"
             ) : datadislikes?.includes(currentUser._id) ? (
               <FavoriteOutlinedIcon
-                style={{ color: "purple", rotate: "180deg"}}
+                style={{ color: "purple", rotate: "180deg" }}
                 onClick={handleDislike}
               />
             ) : (
