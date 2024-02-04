@@ -25,6 +25,13 @@ const Navbar = () => {
       .then((res) => res.data)
   );
 
+  const { isLoading : load, data : dat } = useQuery(["utente"], () =>
+    makeRequest.get("/users/find/" + currentUser._id).then((res) => {
+      console.log(res.data);
+      return res.data;
+    })
+  );
+
   const redirectToChannel = (channelname) => {
     window.location.href = `/channel/${channelname}`;
   };
@@ -111,7 +118,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-
+      {load ? ("loading") : (                   
       <div className="rightside">
         <div className="logoutbutton">
           <button onClick={handleLogout}>
@@ -119,10 +126,10 @@ const Navbar = () => {
           </button>
         </div>
         <div className="user">
-          <img src={`/upload/${currentUser.profilePic}`} alt="" />
+          <img src={`/upload/${dat.profilePic}`} alt="" />
           <span
             onClick={(e) =>
-              (window.location.href = `/profile/${currentUser._id}`)
+              (window.location.href = `/profile/${dat._id}`)
             }
             style={{
               cursor: "pointer",
@@ -130,10 +137,11 @@ const Navbar = () => {
               color: "inherit",
             }}
           >
-            {currentUser.username}
+            {dat.username}
           </span>
         </div>
       </div>
+      )}
     </div>
   );
 };

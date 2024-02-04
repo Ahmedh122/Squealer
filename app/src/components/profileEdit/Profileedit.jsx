@@ -9,7 +9,7 @@ import { AuthContext } from "../../context/Authcontext";
 
 export default function Predit() {
   const [modal, setModal] = useState(false);
-  const username= "pippo";
+  const username= "pippo"; // usare use state
   const [username2, setusername] = useState("");
   const [newprcover, setprcoverpic] = useState("");
   const [newprpic, setprpic] = useState("");
