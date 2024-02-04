@@ -3,6 +3,7 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Link } from "react-router-dom";
 import Comments from "../comments/Comments";
@@ -19,6 +20,7 @@ import { MapContainer, TileLayer, Marker } from "react-leaflet"; // Import Marke
 import "leaflet/dist/leaflet.css";
 import { useEffect } from "react";
 
+
 let DefaultIcon = L.icon({
   iconUrl: icon,
   shadowUrl: iconShadow,
@@ -31,7 +33,10 @@ let DefaultIcon = L.icon({
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
+
+
 const Post = ({ post }) => {
+
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -127,9 +132,11 @@ const Post = ({ post }) => {
     handleShowmap();
   }, [post]);
 
+
+
   return (
     <div className="Post">
-      <div className="containerPost">
+      <div className="containerPost" id="containerPost">
         <div className="userPost">
           <div className="userInfoPost">
             {post.userId && (
@@ -157,10 +164,7 @@ const Post = ({ post }) => {
               </>
             )}
           </div>
-          <MoreHorizIcon onClick={() => setMenuOpen(!menuOpen)} />
-          {menuOpen && post.userId === currentUser._id && (
-            <button onClick={handleDelete}>delete</button>
-          )}
+          <DeleteOutlinedIcon onClick={handleDelete}/>
         </div>
         <div className="contentPost">
           <p>{post.desc}</p>
