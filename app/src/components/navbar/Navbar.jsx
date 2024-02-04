@@ -25,7 +25,7 @@ const Navbar = () => {
       .then((res) => res.data)
   );
 
-  const { isLoading : load, data : dat } = useQuery(["utente"], () =>
+  const { isLoading : load, data : dat } = useQuery(["users"], () =>
     makeRequest.get("/users/find/" + currentUser._id).then((res) => {
       console.log(res.data);
       return res.data;
@@ -69,8 +69,8 @@ const Navbar = () => {
         <DarkModeIcon />
 
         <div className="search">
-          <div className="search_input_div">
-            <button onClick={() => onSearch(value)}>
+          <div className="search_input_div" style={{display: "flex"}}>
+            <button style={{background: "none", border : "none"}} onClick={() => onSearch(value)}>
               <SearchOutlinedIcon />
             </button>
             <input

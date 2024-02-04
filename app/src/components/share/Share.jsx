@@ -11,7 +11,8 @@ import "leaflet/dist/leaflet.css"
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import L from 'leaflet';
-import { useEffect } from "react";
+import { useEffect} from "react";
+import { useQuery } from "react-query";
 
 
 let DefaultIcon = L.icon({
@@ -55,6 +56,15 @@ const Share = ({channelname}) => {
   const { currentUser } = useContext(AuthContext);
   const queryClient = useQueryClient();
 
+  const { isLoading : load, data : dat } = useQuery(["users"], () =>
+    makeRequest.get("/users/find/" + currentUser._id).then((res) => {
+      console.log(res.data);
+      return res.data;
+    })
+  );
+
+
+
   const mutation = useMutation(newPost => {
     return makeRequest.post(
       "/posts",newPost);
@@ -68,7 +78,7 @@ const Share = ({channelname}) => {
   const handleClick = async (e) => {
     e.preventDefault();
     let imgUrl = "";
-    let position = "";
+    //let position = "";
     if (file) imgUrl = await upload();
     //if (markerPosition) position = await upload();
     mutation.mutate({
@@ -119,15 +129,17 @@ const Share = ({channelname}) => {
     <div className="Share">
       <div className="containerShare">
         <div className="topShare">
+        {load ? ("Loading") : ( 
           <div className="leftShare">
-            <img src={`/upload/${currentUser.profilePic}`} alt="" />
+            <img src={`/upload/${dat.profilePic}`} alt="" />
             <input
               type="text"
-              placeholder={`What's on your mind ${currentUser.username}?`}
+              placeholder={`What's on your mind ${dat.username}?`}
               onChange={(e) => setDesc(e.target.value)}
               value={desc}
             />
           </div>
+        )}
         </div>
         <div className="middleShare">
           {file && <img alt="" src={URL.createObjectURL(file)} />}
