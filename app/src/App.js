@@ -22,22 +22,24 @@ function App() {
 
   const queryClient = new QueryClient();
 
-  const Layout = ()=>{
+  const Layout = () => {
     return (
       <QueryClientProvider client={queryClient}>
         <div>
           <Navbar />
-          <div style={{ display: "flex" }}>
+          <div style={{ display: "flex", position: "relative" }}>
             <Leftbar />
-            <div style={{ flex: "6" }}>
+            <div style={{ flex: "6", zIndex: 50 }}>
               <Outlet />
             </div>
-            <Rightbar />
+            <div style={{ flex: "2.5", zIndex: 20 }}>
+              <Rightbar />
+            </div>
           </div>
         </div>
       </QueryClientProvider>
     );
-  }
+  };
 
   const ProtectedRoute = ({ children }) => {
     if (!currentUser) {
