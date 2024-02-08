@@ -6,7 +6,7 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../../context/Authcontext";
 import { useMutation, useQueryClient, } from 'react-query';
 import { makeRequest } from "../../axios";
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'; // Import Marker and useMapEvents
+import { MapContainer, TileLayer, Marker, useMapEvents, Polyline } from 'react-leaflet'; // Import Marker and useMapEvents
 import "leaflet/dist/leaflet.css"
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
@@ -27,6 +27,11 @@ let DefaultIcon = L.icon({
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
+let currentlat = 0
+let currentlng = 0
+let lastknownposition = [currentlat, currentlng]
+var start = [8.681495,49.41461];
+var end = [8.686507,49.41943];
 
 const Share = ({channelname}) => {
 
@@ -95,11 +100,17 @@ const Share = ({channelname}) => {
 
   //  MAPPA
 
-
+  
 
   const handleAddPlace = () => {
-    setShowMap(true);
-  };
+    navigator.geolocation.getCurrentPosition((position) => {
+      currentlat = position.coords.latitude;
+      currentlng = position.coords.longitude;
+      setShowMap(true);
+      setMarkerPosition([currentlat, currentlng]);
+    }
+    );
+};
 
   // Component to handle map events
   const MapEvents = () => {
@@ -125,6 +136,46 @@ const Share = ({channelname}) => {
     return () => clearInterval(intervalId);
   }, [mutation, randDesc]); // Dependencies
 
+  //TIMED POST LOCATION
+  /*useEffect(() => {
+    const intervalId2 = setInterval(() => {
+      navigator.geolocation.getCurrentPosition((position) => {
+        currentlat = position.coords.latitude;
+        currentlng = position.coords.longitude;
+        //postmap(map, [currentlat, currentlng],lastknownposition)
+        setMarkerPosition([currentlat, currentlng]);
+      }
+      );
+      lastknownposition = markerPosition;
+      mutation.mutate({position : markerPosition});
+    }, 1800000 ); // 60000 milliseconds = 1 minute  
+  
+    // Clear the interval when the component is unmounted
+    return () => clearInterval(intervalId2);
+  }, [mutation, markerPosition]); // Dependencies*/
+
+  const [routeCoordinates, setRouteCoordinates] = useState([]);
+
+  useEffect(() => {
+    // Define your start and end locations (as [longitude, latitude])
+    var start = [8.681495,49.41461];
+    var end = [8.686507,49.41943];
+
+    // Call the OpenRouteService API to get the route
+    fetch(`https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf6248076c990f987d45f89a27f6c3c970ea31&start=${start.join(',')}&end=${end.join(',')}`)
+      .then(response => response.json())
+      .then(data => {
+        // Get the coordinates of the route
+        var coords = data.features[0].geometry.coordinates;
+
+        // Convert the coordinates to a format that Leaflet understands
+        coords = coords.map(coord => [coord[1], coord[0]]);
+
+        setRouteCoordinates(coords);
+      });
+  }, []);
+  
+
   return (
     <div className="Share">
       <div className="containerShare">
@@ -143,9 +194,9 @@ const Share = ({channelname}) => {
         </div>
         <div className="middleShare">
           {file && <img alt="" src={URL.createObjectURL(file)} />}
-          {showMap && (
+          {showMap  && (
             <MapContainer
-              center={[44.49744930671936, 11.356477769914472]}
+              center={[ currentlat, currentlng]}
               zoom={15}
               style={{ maxHeight: "500px", height: "100vh", width: "100%" }}
             >
@@ -153,6 +204,7 @@ const Share = ({channelname}) => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
               />
+              {routeCoordinates.length > 0 && <Polyline positions={routeCoordinates} color='blue' />}
               {markerPosition && <Marker position={markerPosition} />}
               <MapEvents />
             </MapContainer>
