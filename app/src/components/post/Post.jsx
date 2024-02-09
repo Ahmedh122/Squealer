@@ -16,7 +16,7 @@ import { AuthContext } from "../../context/Authcontext";
 import L from "leaflet";
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
-import { MapContainer, TileLayer, Marker } from "react-leaflet"; // Import Marker and useMapEvents
+import { MapContainer, TileLayer, Marker , Polyline } from "react-leaflet"; // Import Marker and useMapEvents
 import "leaflet/dist/leaflet.css";
 import { useEffect } from "react";
 
@@ -39,6 +39,7 @@ const Post = ({ post }) => {
 
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  
 
   const { currentUser } = useContext(AuthContext);
 
@@ -118,9 +119,10 @@ const Post = ({ post }) => {
     deleteMutation.mutate(post._id);
   };
 
-  // MAPPA
+  // MAPPA ------------------------------------------------------------------------------------------------------------------
   const [showMap, setShowMap] = useState(false);
   const [markerPosition, setMarkerPosition] = useState(null);
+  const [routeCoordinates, setRouteCoordinates] = useState([]); 
 
   const handleShowmap = () => {
     if (post.position !== null) {
@@ -132,7 +134,26 @@ const Post = ({ post }) => {
     handleShowmap();
   }, [post]);
 
+  
 
+  /*useEffect(() => {
+    // Define your start and end locations (as [longitude, latitude])
+    var start = [8.681495,49.41461];
+    var end = [8.686507,49.41943];
+
+    // Call the OpenRouteService API to get the route
+    fetch(`https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf6248076c990f987d45f89a27f6c3c970ea31&start=${start.join(',')}&end=${end.join(',')}`)
+      .then(response => response.json())
+      .then(data => {
+        // Get the coordinates of the route
+        var coords = data.features[0].geometry.coordinates;
+
+        // Convert the coordinates to a format that Leaflet understands
+        coords = coords.map(coord => [coord[1], coord[0]]);
+
+        setRouteCoordinates(coords);
+      });
+  }, []);*/
 
   return (
     <div className="Post">
@@ -181,6 +202,7 @@ const Post = ({ post }) => {
               zoomControl={false}
               scrollWheelZoom={false}
             >
+              {routeCoordinates.length > 0 && <Polyline positions={routeCoordinates} color='blue' />}
               <Marker position={markerPosition} />
               <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

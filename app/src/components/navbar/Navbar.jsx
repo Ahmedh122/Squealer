@@ -27,7 +27,6 @@ const Navbar = () => {
 
   const { isLoading : load, data : dat } = useQuery(["users"], () =>
     makeRequest.get("/users/find/" + currentUser._id).then((res) => {
-      console.log(res.data);
       return res.data;
     })
   );

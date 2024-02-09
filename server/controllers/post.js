@@ -69,6 +69,7 @@ export const getPosts = async (req, res) => {
 export const addPost = async (req, res) => {
  
   const token = req.cookies.accessToken;
+  console.log(req.body);
   
   
   try {
@@ -85,7 +86,7 @@ export const addPost = async (req, res) => {
       
       channelname: req.body.channelname || "",
     });
-    console.log(newPost,"AAAAAAAAAAAAAAAAA");  
+    console.log(newPost);  
     await newPost.save();
 
     return res.status(200).json("Post has been created.");
