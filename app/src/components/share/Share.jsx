@@ -62,7 +62,7 @@ const Share = ({ channelname }) => {
 
   const { isLoading: load, data: dat } = useQuery(["users"], () =>
     makeRequest.get("/users/find/" + currentUser._id).then((res) => {
-      console.log(res.data);
+      //console.log(res.data);
       return res.data;
     })
   );
@@ -85,7 +85,7 @@ const Share = ({ channelname }) => {
     //let position = "";
     if (file) imgUrl = await upload();
     //if (markerPosition) position = await upload();
-    console.log("markerpos is (handleClick) :"+markerPosition);
+    //console.log("markerpos is (handleClick) :"+markerPosition);
     mutation.mutate({
       desc,
       img: imgUrl,
@@ -129,7 +129,7 @@ const Share = ({ channelname }) => {
       navigator.geolocation.clearWatch(watchId);
       setLive(false);
     }
-    console.log("live :"+live);
+    //console.log("live :"+live);
   };
 
   // Component to handle map events
@@ -161,7 +161,7 @@ const Share = ({ channelname }) => {
     const intervalId2 = setInterval(() => {
       if (live) {
         setMarkerPosition([currentlat, currentlng]);
-      console.log( "markerpos is (automatic) :"+markerPosition);
+      //console.log( "markerpos is (automatic) :"+markerPosition);
       var newposition = {lat : markerPosition[0], lng : markerPosition[1]}  
       mutation.mutate({ desc:"im here", position: newposition, channelname: "MAPPA" });
       } 

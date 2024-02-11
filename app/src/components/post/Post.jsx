@@ -35,7 +35,7 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 
 
-const Post = ({ post }) => {
+const Post = ({ post, routeCoordinates, setRouteCoordinates }) => {
 
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -117,12 +117,17 @@ const Post = ({ post }) => {
 
   const handleDelete = () => {
     deleteMutation.mutate(post._id);
+    // If the post is a MAPPA post, remove its coordinates from routeCoordinates
+    if (post.channelname === "MAPPA" && post.position) {
+      setRouteCoordinates(prevCoordinates => {
+        return prevCoordinates.filter(coord => !(coord[0] === post.position.lat && coord[1] === post.position.lng));
+    });
+  }
   };
 
   // MAPPA ------------------------------------------------------------------------------------------------------------------
   const [showMap, setShowMap] = useState(false);
   const [markerPosition, setMarkerPosition] = useState(null);
-  const [routeCoordinates, setRouteCoordinates] = useState([]);
 
   const handleShowmap = () => {
     if (post.position !== null && post.position !== undefined) {
@@ -134,6 +139,24 @@ const Post = ({ post }) => {
     handleShowmap();
   }, [post]);
 
+  useEffect(() => {
+    if (post && post.channelname === "MAPPA" && post.position) {
+      setRouteCoordinates(prevCoordinates => {
+        const newPosition = [post.position.lat, post.position.lng];
+        const alreadyExists = prevCoordinates.some(coord => coord[0] === newPosition[0] && coord[1] === newPosition[1]);
+        if (!alreadyExists) {
+          return [...prevCoordinates, newPosition];
+        } else {
+          return prevCoordinates;
+        }
+      });
+      console.log("Adding position for post: ", post._id);
+    }
+  }, [post]);
+  
+  useEffect(() => {
+    console.log("routeCoordinates: ", routeCoordinates);
+  }, [routeCoordinates]);
 
   return (
     <div className="Post">

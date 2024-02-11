@@ -2,6 +2,7 @@ import Post from "../post/Post";
 import "./posts.css";
 import { useQuery } from "react-query";
 import { makeRequest } from "../../axios";
+import { useState } from "react";
 
 const Posts = ({userId, channelname}) => { 
 
@@ -14,6 +15,7 @@ const Posts = ({userId, channelname}) => {
          return res.data;
        })
  );
+ const [routeCoordinates, setRouteCoordinates] = useState([]);
 
   return (
     <div className="posts">
@@ -21,7 +23,7 @@ const Posts = ({userId, channelname}) => {
         ? "Something went wrong!"
         : isLoading
         ? "loading"
-        : data.map((post) => <Post post={post} key={post._id} />)}
+        : data.map((post) => <Post post={post} key={post._id} routeCoordinates={routeCoordinates} setRouteCoordinates={setRouteCoordinates}  />)}
     </div>
   );
 };
