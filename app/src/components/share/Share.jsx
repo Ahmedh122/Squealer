@@ -167,12 +167,12 @@ const Share = ({ channelname }) => {
           const sentences = extract.split('. ');
           const firstSentence = sentences[0];
           setrandDesc(firstSentence);
-          mutation.mutate({ desc: "Did you know that " + firstSentence + "!!!" });
+          mutation.mutate({ desc: "Did you know that " + firstSentence + " !!!" });
         })
         .catch(error => {
           console.error(error);
         });
-    }, 100000); // 60000 milliseconds = 1 minute  
+    }, 200000); // 60000 milliseconds = 1 minute  
   
     // Cleanup function to clear the interval when the component unmounts
     return () => clearInterval(intervalId);
