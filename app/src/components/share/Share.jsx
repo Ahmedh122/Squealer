@@ -13,6 +13,7 @@ import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import L from 'leaflet';
 import { useEffect } from "react";
 import { useQuery } from "react-query";
+import axios from "axios";
 
 
 let DefaultIcon = L.icon({
@@ -145,7 +146,7 @@ const Share = ({ channelname }) => {
 
   // TIMED POST (fare una mutation apposta??? ) FUNZIONA
 
-  useEffect(() => {
+  /*useEffect(() => {
     const intervalId = setInterval(() => {
       setrandDesc("I'm thinking about " + Math.floor(Math.random() * 100) + " things at the same time");
       console.log(randDesc);
@@ -154,7 +155,30 @@ const Share = ({ channelname }) => {
 
     // Clear the interval when the component is unmounted
     return () => clearInterval(intervalId);
-  }, [mutation, randDesc]); // Dependencies
+  }, [mutation, randDesc]); // Dependencies/*/
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      axios.get('https://en.wikipedia.org/w/api.php?format=json&action=query&generator=random&grnnamespace=0&prop=extracts&exintro&explaintext&grnlimit=1&origin=*')
+        .then(response => {
+          const pages = response.data.query.pages;
+          const pageId = Object.keys(pages)[0];
+          const extract = pages[pageId].extract;
+          const sentences = extract.split('. ');
+          const firstSentence = sentences[0];
+          setrandDesc(firstSentence);
+          mutation.mutate({ desc: "Did you know that " + firstSentence + "!!!" });
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }, 100000); // 60000 milliseconds = 1 minute  
+  
+    // Cleanup function to clear the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, []);
+
+
 
   //TIMED POST LOCATION
   useEffect(() => {
