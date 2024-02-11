@@ -108,7 +108,6 @@ const Share = ({ channelname }) => {
       currentlng = position.coords.longitude;
       setShowMap(true);
       setMarkerPosition([currentlat, currentlng]);
-      console.log("markerpos is (handleAddPlace) :"+markerPosition);
     }
     );
   };
@@ -171,10 +170,6 @@ const Share = ({ channelname }) => {
     // Clear the interval when the component is unmounted
     return () => clearInterval(intervalId2);
   }, [mutation, markerPosition]); // Dependencies
-
-
-
-
 
   return (
     <div className="Share">
