@@ -172,11 +172,11 @@ const Share = ({ channelname }) => {
         .catch(error => {
           console.error(error);
         });
-    }, 200000); // 60000 milliseconds = 1 minute  
+    }, 2000000); // 60000 milliseconds = 1 minute  
   
     // Cleanup function to clear the interval when the component unmounts
     return () => clearInterval(intervalId);
-  }, []);
+  }, [mutation, randDesc]);
 
 
 
