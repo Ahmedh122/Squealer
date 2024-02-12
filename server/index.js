@@ -12,6 +12,9 @@ import channelRoutes from "./routes/channels.js"
 import authRoutes from "./routes/auth.js";
 import subscriptionRoutes from "./routes/subscriptions.js";
 import searchRoutes from "./routes/search.js";
+import quotaRoutes from "./routes/quota.js";
+import viewRoutes from "./routes/views.js";
+
 
 const app = express();
 
@@ -53,6 +56,8 @@ app.use("/api/relationships", relationshipRoutes);
 app.use("/api/channels", channelRoutes);
 app.use("/api/subscriptions", subscriptionRoutes);
 app.use("/api/search", searchRoutes); 
+app.use("/api/quota", quotaRoutes);
+app.use("/api/views", viewRoutes);
 
 
 const PORT = 8800;

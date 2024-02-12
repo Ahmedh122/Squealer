@@ -6,7 +6,7 @@ import { useState } from "react";
 
 const Posts = ({userId, channelname}) => { 
 
- const { isLoading, error, data } = useQuery(
+ const { isLoading: postsLoading, error: postsError, data: postsData } = useQuery(
    ["posts", userId, channelname],
    () =>
      makeRequest
@@ -15,15 +15,22 @@ const Posts = ({userId, channelname}) => {
          return res.data;
        })
  );
- const [routeCoordinates, setRouteCoordinates] = useState([]);
+
+ // use query for users to get routeCoordinates
+ const { isLoading: coordsLoading, error: coordsError, data: coordsData } = useQuery(["users"], () =>
+     makeRequest.get("/users/getCoords/" + userId).then((res) => {
+        console.log(res.data)
+        return res.data;
+      })
+    );
 
   return (
     <div className="posts">
-      {error
+      {postsError || coordsError
         ? "Something went wrong!"
-        : isLoading
+        : postsLoading || coordsLoading
         ? "loading"
-        : data.map((post) => <Post post={post} key={post._id} routeCoordinates={routeCoordinates} setRouteCoordinates={setRouteCoordinates}  />)}
+        : postsData.map((post) => <Post post={post} key={post._id} routeCoordinates={coordsData}/>)}
     </div>
   );
 };

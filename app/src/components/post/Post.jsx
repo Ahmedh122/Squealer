@@ -18,7 +18,7 @@ import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import { MapContainer, TileLayer, Marker , Polyline } from "react-leaflet"; // Import Marker and useMapEvents
 import "leaflet/dist/leaflet.css";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 
 let DefaultIcon = L.icon({
@@ -35,13 +35,20 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 
 
-const Post = ({ post, routeCoordinates, setRouteCoordinates }) => {
+const Post = ({ post, routeCoordinates}) => {
 
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [thisrouteCoordinates, setRouteCoordinates] = useState(routeCoordinates);
   
 
   const { currentUser } = useContext(AuthContext);
+
+  const { isLoading: loaduser, data: datauser } = useQuery(["users"], () =>
+  makeRequest.get("/users/find/" + post.userId).then((res) => {
+    return res.data;
+  })
+);
 
   const {
     isLoadinglikes,
@@ -120,7 +127,7 @@ const Post = ({ post, routeCoordinates, setRouteCoordinates }) => {
     // If the post is a MAPPA post, remove its coordinates from routeCoordinates
     if (post.channelname === "MAPPA" && post.position) {
       setRouteCoordinates(prevCoordinates => {
-        return prevCoordinates.filter(coord => !(coord[0] === post.position.lat && coord[1] === post.position.lng));
+        return coordmutation.mutate(prevCoordinates.filter(coord => !(coord[0] === post.position.lat && coord[1] === post.position.lng)));
     });
   }
   };
@@ -128,6 +135,14 @@ const Post = ({ post, routeCoordinates, setRouteCoordinates }) => {
   // MAPPA ------------------------------------------------------------------------------------------------------------------
   const [showMap, setShowMap] = useState(false);
   const [markerPosition, setMarkerPosition] = useState(null);
+
+  const coordmutation = useMutation(updateCoords => {
+    return makeRequest.put("/users/position",updateCoords).then(res => res.data);
+  }, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["users"]);
+    },
+  });
 
   const handleShowmap = () => {
     if (post.position !== null && post.position !== undefined) {
@@ -140,7 +155,7 @@ const Post = ({ post, routeCoordinates, setRouteCoordinates }) => {
   }, [post]);
 
   useEffect(() => {
-    if (post && post.channelname === "MAPPA" && post.position) {
+    if (post && datauser.islive && post.position) {
       setRouteCoordinates(prevCoordinates => {
         const newPosition = [post.position.lat, post.position.lng];
         const alreadyExists = prevCoordinates.some(coord => coord[0] === newPosition[0] && coord[1] === newPosition[1]);
@@ -151,14 +166,49 @@ const Post = ({ post, routeCoordinates, setRouteCoordinates }) => {
         }
       });
       console.log("Adding position for post: ", post._id);
+      coordmutation.mutate(thisrouteCoordinates)
     }
   }, [post]);
+
+
+
   
   useEffect(() => {
-    console.log("routeCoordinates: ", routeCoordinates);
-  }, [routeCoordinates]);
+    //console.log("routeCoordinates: ", thisrouteCoordinates);
+  }, [thisrouteCoordinates]);
 
-  return (
+  const postRef = useRef();
+
+ useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      // If the post is in the viewport, record the view
+      if (entries[0].isIntersecting) {
+        makeRequest.post(`/views/${post._id}/${currentUser._id}`)
+          .then(response => {
+            console.log('View recorded successfully');
+          })
+          .catch(error => {
+            console.error('Error recording view:', error);
+          });
+      }
+    });
+
+    if (postRef.current) {
+      observer.observe(postRef.current);
+    }
+
+    return () => {
+      if (postRef.current) {
+        observer.unobserve(postRef.current);
+      }
+    };
+  }, [post._id, currentUser._id]);
+
+
+
+
+
+  return ( <div ref= {postRef}>
     <div className="Post">
       <div className="containerPost" id="containerPost">
         <div className="userPost">
@@ -205,7 +255,7 @@ const Post = ({ post, routeCoordinates, setRouteCoordinates }) => {
               zoomControl={false}
               scrollWheelZoom={false}
             >
-              {routeCoordinates.length>0 && < Polyline positions={routeCoordinates} color='blue' />}
+              {thisrouteCoordinates.length>0 && < Polyline positions={thisrouteCoordinates} color='blue' />}
               <Marker position={markerPosition} />
               <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -253,10 +303,12 @@ const Post = ({ post, routeCoordinates, setRouteCoordinates }) => {
             <TextsmsOutlinedIcon />
             See Comments
           </div>
+          <div className="views"><span>views</span>{post.views}</div> 
         </div>
         {commentOpen && <Comments postId={post._id} />}
       </div>
     </div>
+  </div>
   );
 };
 

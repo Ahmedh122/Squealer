@@ -27,6 +27,7 @@ const Profile = () => {
   const { currentUser } = useContext(AuthContext);
   const { isLoading, data } = useQuery(["users"], () =>
     makeRequest.get("/users/find/" + userId).then((res) => {
+      console.log(res.data);
       return res.data;
     })
   );

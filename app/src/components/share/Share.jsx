@@ -40,6 +40,26 @@ const Share = ({ channelname }) => {
   const [randDesc, setrandDesc] = useState("");
   const [showMap, setShowMap] = useState(false);
   const [markerPosition, setMarkerPosition] = useState(null);
+  const { currentUser } = useContext(AuthContext);
+
+
+const {
+    isLoadingQuota,
+    errorQuota,
+    data: dataQuota,
+  } = useQuery(["Quota"], () =>
+    makeRequest.get(`/quota/${currentUser._id}`).then((res) => {
+      return res.data;
+    })
+  );
+
+  const [quota, setQuota] = useState(dataQuota?.quota);
+  const queryClient = useQueryClient();
+
+
+
+
+
 
   const upload = async () => {
     try {
@@ -58,8 +78,8 @@ const Share = ({ channelname }) => {
     }
   }
 
-  const { currentUser } = useContext(AuthContext);
-  const queryClient = useQueryClient();
+  
+  
 
   const { isLoading: load, data: dat } = useQuery(["users"], () =>
     makeRequest.get("/users/find/" + currentUser._id).then((res) => {
@@ -80,6 +100,20 @@ const Share = ({ channelname }) => {
     },
   });
 
+
+    useEffect(() => {
+    let quotaUsed = desc.length;
+    if (file) {
+      quotaUsed += 10;
+    }
+    if (dataQuota?.quota) {
+      // Check if dataQuota is defined
+      setQuota(dataQuota?.quota - quotaUsed);
+    }
+  }, [desc, file, dataQuota]);
+
+
+
   const handleClick = async (e) => {
     e.preventDefault();
     let imgUrl = "";
@@ -93,6 +127,23 @@ const Share = ({ channelname }) => {
       position: markerPosition,
       channelname,
     });
+      // Call modifyQuota on the server
+  try {
+    const resQuota = await makeRequest.post("/quota", {
+      userId: currentUser._id,
+      usedQuota: desc.length + (file ? 10 : 0),
+    });
+      queryClient.invalidateQueries(["Quota"]);
+      const { data: updatedQuotaData } = await queryClient.fetchQuery(
+        ["Quota"],
+        () =>
+          makeRequest.get(`/quota/${currentUser._id}`).then((res) => res.data)
+      );
+    console.log(resQuota.data.message); // Log the server response
+  } catch (err) {
+    console.error(err);
+  }
+
     setDesc("");
     setFile(null);
     setMarkerPosition(null);
@@ -251,9 +302,22 @@ const Share = ({ channelname }) => {
               <img src={Friend} alt="" />
               <span>Tag Friends</span>
             </div>
+              
             <div className="itemShare" onClick={handleLive}>
               <img src={Map} alt="" />
               <span>{live ? "Stop Live" : "Go Live"}</span>
+            </div>
+            <div className="quota">
+              <span>quota: </span>
+              {isLoadingQuota ? (
+                "Loading"
+              ) : errorQuota ? (
+                <>{`Error: ${errorQuota.message}`}</>
+              ) : (
+                <span>
+                  {quota}/{dataQuota?.maxquota}
+                </span>
+              )}
             </div>
           </div>
           <div className="rightShare">

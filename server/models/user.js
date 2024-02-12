@@ -34,13 +34,12 @@ const userSchema = new mongoose.Schema({
   coverPic: {
     type: String,
   },
-  maxQuota: {
-    type: Number,
-    default: 1000,
+  islive: {
+    type: Boolean,
+    default: false,
   },
-  currentQuota: {
-    type: Number,
-    default: 1000,
+  routeCoordinates: {
+    type: [[Number]],
   },
   // Add other fields as needed
 });

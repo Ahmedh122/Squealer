@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const quotaSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // Assuming you have a User model
+    ref: "User", 
     required: true,
   },
   quota: {
@@ -16,9 +16,10 @@ const quotaSchema = new mongoose.Schema({
     type: Number,
     required: true,
     default:1000
-  } 
+  } ,
+
 });
 
-const Like = mongoose.model("Like", likeSchema);
+const Quota = mongoose.model("Quota", quotaSchema);
 
 export default Quota;

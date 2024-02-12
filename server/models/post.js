@@ -28,6 +28,20 @@ const postSchema = new mongoose.Schema({
     lat : {type: Number},
     lng : {type: Number},
   },
+
+    views: {
+    type: Number,
+    default: 0,
+  },
+
+  viewedUsers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+
+
 });
 
 const Post = mongoose.model("Post", postSchema);

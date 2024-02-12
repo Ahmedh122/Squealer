@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
+import Quota from "../models/quota.js";
 
 export const register = async (req, res) => {
   try {
@@ -23,6 +24,18 @@ export const register = async (req, res) => {
     });
 
     await newUser.save();
+
+
+    const newQuota = new Quota({
+      userId: newUser._id,
+
+    });
+
+    // Save the new quota document
+    await newQuota.save();
+
+
+
     return res.status(200).json("User has been created.");
   } catch (error) {
     console.error(error);
@@ -45,7 +58,7 @@ export const login = async (req, res) => {
     }
 
 
-  
+
     // Generate a JWT token
     const token = jwt.sign({ id: user._id }, "secretkey");
 
@@ -56,6 +69,20 @@ export const login = async (req, res) => {
     res.cookie("accessToken", token, {
       httpOnly: true,
     });
+
+
+    const existsQuota = await Quota.findOne({ userId: user._id });
+    if (!existsQuota) {
+      const newQuota = new Quota({
+        userId: user._id,
+      });
+
+
+      await newQuota.save();
+
+    }
+
+
 
     return res.status(200).json(others);
   } catch (error) {
