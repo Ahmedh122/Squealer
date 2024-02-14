@@ -43,6 +43,7 @@ const Share = ({ channelname }) => {
   const { currentUser } = useContext(AuthContext);
   const [lastLivePostId, setLastLivePostId] = useState(null);
   const [currentLivePostId, setCurrentLivePostId] = useState(null);
+  const [thisrouteCoordinates, setRouteCoordinates] = useState([]);
 
 
 const {
@@ -216,6 +217,7 @@ const {
       coordmutation.mutate([])
       setCurrentLivePostId(null);
       setLastLivePostId(null);
+      setRouteCoordinates([]);
     }
     //console.log("live :"+live);
   };
@@ -275,7 +277,7 @@ const {
   });
 
   
-  const [thisrouteCoordinates, setRouteCoordinates] = useState([]);
+  
 
   //TIMED POST LOCATION
   useEffect(() => {
