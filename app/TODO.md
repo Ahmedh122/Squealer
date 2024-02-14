@@ -51,3 +51,18 @@
 - [ ] Possibilita di comprare caratteri se li finisco mentre sto scrivendo un messaggio
 - [ ] Non è possibile silenziare alcuni canali
 - [ ] Messaggi automatici presi da API
+
+
+## COSE DA FARE
+
+- [ ] mettere a posto lo share pag 17
+- [ ] calcolare la quota con logica del prof
+- [ ] mettere a posto i canali (canali maiuscoli minuscoli #keyword)
+- [ ] mettere i video
+- [ ] refresh live ogni tot metri invece che secondi
+- [ ] bug creazione canali
+- [ ] errore 403 del delete post vecchio live
+- [ ] Tipo di account: normale, verificato, professional, moderatore squealer
+- [ ] Funzioni di lettura senza login Solo messaggi di canali ufficiali Squealer
+- [ ] suono notifica
+- [ ] css tutto apposto , tweak vari
