@@ -29,6 +29,11 @@ const postSchema = new mongoose.Schema({
     lng : {type: Number},
   },
 
+  islive: {
+    type: Boolean,
+    default: false,
+  },
+
     views: {
     type: Number,
     default: 0,

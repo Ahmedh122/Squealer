@@ -69,27 +69,28 @@ export const getPosts = async (req, res) => {
 export const addPost = async (req, res) => {
  
   const token = req.cookies.accessToken;
-  console.log(req.body);
+  //console.log(req.body);
   
   
   try {
     if (!token) return res.status(401).json("Not logged in!");
 
     const userInfo = jwt.verify(token, "secretkey");
-    console.log(userInfo.id);
+    //console.log(userInfo.id);
     const position = req.body.position ? { lat: req.body.position.lat, lng: req.body.position.lng } : null;
     const newPost = new Post({
       desc: req.body.desc,
       img: req.body.img,
       userId: userInfo.id,
       position: position,
+      islive : req.body.islive || false,
       
       channelname: req.body.channelname || "",
     });
-    console.log(newPost);  
-    await newPost.save();
+    //console.log(newPost);  
+    const savedPost = await newPost.save();
 
-    return res.status(200).json("Post has been created.");
+    return res.status(200).json({ message: "Post has been created.", postId: savedPost._id, islive: savedPost.islive });
   } catch (error) {
     console.error(error);
     return res.status(500).json(error.message || "Internal Server Error");

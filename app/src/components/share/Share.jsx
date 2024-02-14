@@ -30,7 +30,7 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 let currentlat = 0
 let currentlng = 0
-let lastknownposition = [currentlat, currentlng]
+
 
 
 const Share = ({ channelname }) => {
@@ -41,6 +41,8 @@ const Share = ({ channelname }) => {
   const [showMap, setShowMap] = useState(false);
   const [markerPosition, setMarkerPosition] = useState(null);
   const { currentUser } = useContext(AuthContext);
+  const [lastLivePostId, setLastLivePostId] = useState(null);
+  const [currentLivePostId, setCurrentLivePostId] = useState(null);
 
 
 const {
@@ -91,15 +93,44 @@ const {
 
 
   const mutation = useMutation(newPost => {
-    return makeRequest.post(
-      "/posts", newPost);
+    return makeRequest.post("/posts", newPost);
   }, {
-    onSuccess: () => {
+    onSuccess: (data) => {
+      // Update state variables
+      if (data.data.islive){
+        setLastLivePostId(currentLivePostId);
+        setCurrentLivePostId(data.data.postId);
+      }
       // Invalidate and refetch
       queryClient.invalidateQueries(["posts"]);
     },
   });
 
+  useEffect(() => {
+    console.log("current: ", currentLivePostId);
+    console.log("last: ", lastLivePostId);
+    if (lastLivePostId) {
+      deleteMutation.mutate(lastLivePostId);
+    }
+  }, [currentLivePostId, lastLivePostId]);
+
+  const deleteMutation = useMutation(
+    (postId) => {
+      return makeRequest.delete("/posts/" + postId);
+    },
+    {
+      onSuccess: () => {
+        // Invalidate and refetch
+        queryClient.invalidateQueries(["posts"]);
+      },
+    }
+  );
+  
+  // Log the updated state
+  /*useEffect(() => {
+    console.log("current: ", currentLivePostId);
+    console.log("last: ", lastLivePostId);
+  }, [currentLivePostId, lastLivePostId]);*/
 
     useEffect(() => {
     let quotaUsed = desc.length;
@@ -164,22 +195,27 @@ const {
     );
   };
 
-  const [live, setLive] = useState(false);
+  //const [live, setLive] = useState(false);
   const [watchId, setWatchId] = useState(null);
 
 
-  const handleLive = () => {
-    if (!live) {
+  const handleLive = async () => {
+    if (!dat.islive) {
       const id = navigator.geolocation.watchPosition((position) => {
         currentlat = position.coords.latitude;
         currentlng = position.coords.longitude;
         setMarkerPosition([currentlat, currentlng]);
       });
       setWatchId(id);
-      setLive(true);
+      await makeRequest.put("/users/update/" , { islive: true });
+      queryClient.invalidateQueries(["users"]);
     } else {
       navigator.geolocation.clearWatch(watchId);
-      setLive(false);
+      await makeRequest.put("/users/update/" , { islive: false });
+      queryClient.invalidateQueries(["users"]);
+      coordmutation.mutate([])
+      setCurrentLivePostId(null);
+      setLastLivePostId(null);
     }
     //console.log("live :"+live);
   };
@@ -229,22 +265,51 @@ const {
     return () => clearInterval(intervalId);
   }, [mutation, randDesc]);
 
+  const coordmutation = useMutation(updateCoords => {
+    console.log("updateCoords: ", updateCoords);
+    return makeRequest.put("/users/position",updateCoords).then(res => res.data);
+  }, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["users"]);
+    },
+  });
 
+  
+  const [thisrouteCoordinates, setRouteCoordinates] = useState([]);
 
   //TIMED POST LOCATION
   useEffect(() => {
     const intervalId2 = setInterval(() => {
-      if (live) {
+      if (dat.islive) {
         setMarkerPosition([currentlat, currentlng]);
-      //console.log( "markerpos is (automatic) :"+markerPosition);
-      var newposition = {lat : markerPosition[0], lng : markerPosition[1]}  
-      mutation.mutate({ desc:"im here", position: newposition, channelname: "MAPPA" });
+        var newposition = {lat : currentlat, lng : currentlng}  
+        mutation.mutate({ desc:"im here", position: newposition, channelname: "MAPPA", islive: true});
+        setRouteCoordinates(prevCoordinates => {
+          const newPosition = [currentlat, currentlng];
+          const alreadyExists = prevCoordinates.some(coord => coord[0] === newPosition[0] && coord[1] === newPosition[1]);
+          if (!alreadyExists) {
+            return [...prevCoordinates, newPosition];
+          } else {
+            return prevCoordinates;
+          }
+        });
+        if (lastLivePostId) {
+          deleteMutation.mutate(lastLivePostId);
+        }
+        
       } 
     }, 10000); // 60000 milliseconds = 1 minute  
-
+  
     // Clear the interval when the component is unmounted
     return () => clearInterval(intervalId2);
-  }, [mutation, markerPosition]); // Dependencies
+  }, [mutation]); // Dependencies
+  
+  // New useEffect hook // NON SO SE MI PIACE QUESTO
+  useEffect(() => {
+    console.log("thisrouteCoordinates:", thisrouteCoordinates)
+    coordmutation.mutate(thisrouteCoordinates);
+  }, [thisrouteCoordinates]); // Dependency on thisrouteCoordinates
+  
 
   return (
     <div className="Share">
@@ -305,7 +370,7 @@ const {
               
             <div className="itemShare" onClick={handleLive}>
               <img src={Map} alt="" />
-              <span>{live ? "Stop Live" : "Go Live"}</span>
+              <span>{dat && dat.islive ? "Stop Live" : "Go Live"}</span>
             </div>
             <div className="quota">
               <span>quota: </span>

@@ -30,7 +30,7 @@ export default function Predit() {
   const mutation = useMutation(
     updateUser => {
       return makeRequest
-        .put("/users", updateUser)
+        .put("/users/update", updateUser)
         .then((res) => res.data);
     },
     {

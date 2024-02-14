@@ -35,20 +35,16 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 
 
-const Post = ({ post, routeCoordinates}) => {
+const Post = ({ post, user}) => {
 
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [thisrouteCoordinates, setRouteCoordinates] = useState(routeCoordinates);
+ // const [thisrouteCoordinates, setRouteCoordinates] = useState(user.routeCoordinates);
   
 
   const { currentUser } = useContext(AuthContext);
 
-  const { isLoading: loaduser, data: datauser } = useQuery(["users"], () =>
-  makeRequest.get("/users/find/" + post.userId).then((res) => {
-    return res.data;
-  })
-);
+
 
   const {
     isLoadinglikes,
@@ -125,24 +121,25 @@ const Post = ({ post, routeCoordinates}) => {
   const handleDelete = () => {
     deleteMutation.mutate(post._id);
     // If the post is a MAPPA post, remove its coordinates from routeCoordinates
-    if (post.channelname === "MAPPA" && post.position) {
+    /*if (post.channelname === "MAPPA" && post.position) {
       setRouteCoordinates(prevCoordinates => {
         return coordmutation.mutate(prevCoordinates.filter(coord => !(coord[0] === post.position.lat && coord[1] === post.position.lng)));
     });
-  }
+  }*/
   };
 
   // MAPPA ------------------------------------------------------------------------------------------------------------------
   const [showMap, setShowMap] = useState(false);
   const [markerPosition, setMarkerPosition] = useState(null);
 
-  const coordmutation = useMutation(updateCoords => {
+ /* const coordmutation = useMutation(updateCoords => {
+    console.log("updateCoords: ", updateCoords);
     return makeRequest.put("/users/position",updateCoords).then(res => res.data);
   }, {
     onSuccess: () => {
       queryClient.invalidateQueries(["users"]);
     },
-  });
+  });*/
 
   const handleShowmap = () => {
     if (post.position !== null && post.position !== undefined) {
@@ -154,8 +151,9 @@ const Post = ({ post, routeCoordinates}) => {
     handleShowmap();
   }, [post]);
 
-  useEffect(() => {
-    if (post && datauser.islive && post.position) {
+  /*useEffect(() => {
+    if (post?.position && user?.islive) {
+      console.log("ciao")
       setRouteCoordinates(prevCoordinates => {
         const newPosition = [post.position.lat, post.position.lng];
         const alreadyExists = prevCoordinates.some(coord => coord[0] === newPosition[0] && coord[1] === newPosition[1]);
@@ -165,17 +163,17 @@ const Post = ({ post, routeCoordinates}) => {
           return prevCoordinates;
         }
       });
-      console.log("Adding position for post: ", post._id);
+      console.log("thisrouteCoordinates: ", thisrouteCoordinates);
       coordmutation.mutate(thisrouteCoordinates)
     }
-  }, [post]);
+  }, [post?.position, user?.islive]);*/
 
 
 
   
-  useEffect(() => {
+  /*useEffect(() => {
     //console.log("routeCoordinates: ", thisrouteCoordinates);
-  }, [thisrouteCoordinates]);
+  }, [thisrouteCoordinates]);*/
 
   const postRef = useRef();
 
@@ -255,7 +253,7 @@ const Post = ({ post, routeCoordinates}) => {
               zoomControl={false}
               scrollWheelZoom={false}
             >
-              {thisrouteCoordinates.length>0 && < Polyline positions={thisrouteCoordinates} color='blue' />}
+              {user.routeCoordinates.length>0 && < Polyline positions={user.routeCoordinates} color='blue' />}
               <Marker position={markerPosition} />
               <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

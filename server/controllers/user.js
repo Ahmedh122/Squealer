@@ -21,6 +21,7 @@ export const getUser = async (req, res) => {
 };
 export const updateUser = async (req, res) => {
   const token = req.cookies.accessToken;
+  console.log(req.body);
 
   if (!token) {
     return res.status(401).json("Not authenticated!");
@@ -57,6 +58,9 @@ export const updateUser = async (req, res) => {
       if (req.body.newprcover) {
         updateFields.coverPic = req.body.newprcover;
       }
+
+      updateFields.islive = req.body.islive;
+
 
       const updatedUser = await User.findByIdAndUpdate(
         userId,
@@ -103,7 +107,7 @@ export const getCoords = async (req, res) => {
 
 export const updateCoords = async (req, res) => {
   const token = req.cookies.accessToken;
-  console.log(req.body);
+  console.log(req.body, "yolo");
 
   if (!token) {
     return res.status(401).json("Not authenticated!");
@@ -129,16 +133,17 @@ export const updateCoords = async (req, res) => {
 
       const updateFields = {};
 
-      if (req.body.routeCoordinates) {
-        updateFields.routeCoordinates = req.body.routeCoordinates;
+      if (req.body || req.body == []) {
+        console.log("updating")
+        updateFields.routeCoordinates = req.body;
       }
 
       const updatedUser = await User.findByIdAndUpdate(
         userId,
         { $set: updateFields },
-        { new: true }
+        { new: true, runValidators: true}
       );
-
+      console.log('updatedUser:', updatedUser);
       return res.status(200).json({
         message: "User has been updated.",
         _id: updatedUser._id,
