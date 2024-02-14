@@ -301,7 +301,7 @@ const Post = ({ post, user}) => {
             <TextsmsOutlinedIcon />
             See Comments
           </div>
-          <div className="views"><span>views</span>{post.views}</div> 
+          <div className="views"><span>views: </span>{post.views}</div> 
         </div>
         {commentOpen && <Comments postId={post._id} />}
       </div>

@@ -36,6 +36,10 @@ export default function Modal() {
           queryClient.invalidateQueries(["channels"]);
           window.location.href = `/channel/${data.channelname}`;
         },
+
+        onError: (error) => {
+          alert(error.response.data);
+        }
       }
     );
 
@@ -101,7 +105,7 @@ export default function Modal() {
                 className="inputform"
                 type="text"
                 placeholder="Channel Name"
-                onChange={(e) => setChannelname(e.target.value)}
+                onChange={(e) => setChannelname(e.target.value.toLowerCase())}
                 value={channelname}
               />
 
