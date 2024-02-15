@@ -5,30 +5,24 @@ import { makeRequest } from "../../axios";
 import { useContext } from "react";
 import { AuthContext } from "../../context/Authcontext";
 
-
 const Posts = ({userId, channelname}) => { 
-
   const currentuser = useContext(AuthContext);
-  
 
- const { isLoading: postsLoading, error: postsError, data: postsData } = useQuery(
-   ["posts", userId, channelname],
-   () =>
-     makeRequest
-       .get(`/posts?userId=${userId}&channelname=${channelname}`)
-       .then((res) => {
-         return res.data;
-       })
- );
+  const { isLoading: postsLoading, error: postsError, data: postsData } = useQuery(
+    ["posts", userId, channelname],
+    () =>
+      makeRequest
+        .get(`/posts?userId=${userId}&channelname=${channelname}`)
+        .then((res) => {
+          return res.data;
+        })
+  );
 
- // use query for users to get routeCoordinates
- const { isLoading: userLoading, error: userError, data: userData } = useQuery(["users"], () =>
-     makeRequest.get("/users/find/" + currentuser.currentUser._id).then((res) => {
+  const { isLoading: userLoading, error: userError, data: userData } = useQuery(["users"], () =>
+      makeRequest.get("/users/find/").then((res) => {
         return res.data;
       })
     );
-
-
 
   return (
     <div className="posts">
@@ -36,7 +30,10 @@ const Posts = ({userId, channelname}) => {
         ? "Something went wrong!"
         : postsLoading || userLoading 
         ? "loading"
-        : postsData.map((post) => <Post post={post} key={post._id} user={userData} />)}
+        : postsData.map((post) => {
+          const user = userData.find(user => user._id === post.userId._id);
+          return <Post post={post} key={post._id} user={user} />
+        })}
     </div>
   );
 };

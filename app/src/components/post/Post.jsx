@@ -36,7 +36,6 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 
 const Post = ({ post, user}) => {
-
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
  // const [thisrouteCoordinates, setRouteCoordinates] = useState(user.routeCoordinates);

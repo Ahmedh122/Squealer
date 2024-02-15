@@ -158,3 +158,24 @@ export const updateCoords = async (req, res) => {
 
 
 };
+
+
+export const getUsers = async (req, res) => {
+  try {
+    const users = await User.find({});
+    if (!users) {
+      return res.status(404).json({ message: "No users found" });
+    }
+
+    // Exclude sensitive information like password before sending the response
+    const usersData = users.map(user => {
+      const { password, ...data } = user.toObject();
+      return data;
+    });
+
+    return res.json(usersData);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
