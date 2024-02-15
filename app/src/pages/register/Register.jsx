@@ -1,8 +1,11 @@
 import './register.css'
 //import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
+import { useContext } from 'react';
+import { AuthContext } from '../../context/Authcontext';
+
 
 
 const Register = () => {
@@ -21,6 +24,9 @@ const Register = () => {
   const handleChange = (e) => {
     setInputs({...inputs, [e.target.name]: e.target.value});
   }
+  
+  const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,7 +34,9 @@ const Register = () => {
       console.log('waiting...');
       await axios.post('http://localhost:8800/api/auth/register', inputs);
       console.log('success');
-      Navigate('/');
+      await login(inputs);
+      navigate('/');
+      console.log('done');
     } catch (error) {
       setError(error.response);
     }
