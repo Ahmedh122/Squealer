@@ -31,15 +31,19 @@ export const addChannel = async (req, res) => {
 
     // Check if channel already exists
     const existingChannel = await Channel.findOne({ channelname: req.body.channelname });
-    if (existingChannel) {
+    if (existingChannel && existingChannel.isHashtag === false) {
       return res.status(409).json("Channel already exists!");
     }
-
+    if (existingChannel && existingChannel.isHashtag === true) {
+      return;
+    }
     const newChannel = new Channel({
       admin: req.body.admin,
       channelname: req.body.channelname,
       channelPic: req.body.channelpic,
       coverPic: req.body.coverpic,
+      isHashtag: req.body.isHashtag || false,
+      isAdmin: req.body.isAdmin || false,
     });
 
     await newChannel.save();

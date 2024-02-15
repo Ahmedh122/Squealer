@@ -80,6 +80,7 @@ const Channel = () => {
         "loading..."
       ) : (
         <>
+          {data.isHashtag ? null : (
           <div className="imagesChannel">
             <img
               src={`/upload/${data.coverPic}`}
@@ -92,6 +93,7 @@ const Channel = () => {
               className="profilePicChannel"
             />
           </div>
+        )}
           <div className="profileContainerChannel">
             <div className="uInfoChannel" style={{ marginTop: "20px" }}>
               <div className="leftChannel">
@@ -112,7 +114,7 @@ const Channel = () => {
                 </a>
               </div>
               <div className="centerChannel">
-                <span>{data.channelname}</span>
+                <span>{data.isHashtag ? `#${data.channelname}` : data.channelname}</span>
                 <div className="infoChannel">
                   <div className="itemChannel">
                     <PlaceIcon />
@@ -146,7 +148,7 @@ const Channel = () => {
               </div>
             </div>
             {(currentUser._id === data.admin._id ||
-              subscriptionData.includes(currentUser._id)) && (
+              subscriptionData.includes(currentUser._id)) &&  /*!data.isHashtag && !data.isAdmin &&*/ (
               <Share channelname={channelname} />
             )}
             <Posts channelname={channelname} />

@@ -25,7 +25,7 @@ const Navbar = () => {
       .then((res) => res.data)
   );
 
-  const { isLoading : load, data : dat } = useQuery(["users"], () =>
+  const { isLoading : load, data : dat } = useQuery(["usersnavbar"], () =>
     makeRequest.get("/users/find/" + currentUser._id).then((res) => {
       return res.data;
     })

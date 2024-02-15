@@ -119,7 +119,9 @@ const Post = ({ post, user}) => {
   };
 
   const handleDelete = () => {
-    deleteMutation.mutate(post._id);
+    if (post.userId._id === currentUser._id) {
+      deleteMutation.mutate(post._id);
+    }
     // If the post is a MAPPA post, remove its coordinates from routeCoordinates
     /*if (post.channelname === "MAPPA" && post.position) {
       setRouteCoordinates(prevCoordinates => {

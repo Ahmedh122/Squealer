@@ -36,6 +36,7 @@ export default function Predit() {
     {
       onSuccess: (data) => {
         console.log(data);
+        queryClient.invalidateQueries(["usersprofile"]);
         queryClient.invalidateQueries(["users"]);
         window.location.href = `/profile/${data._id}`;
       },

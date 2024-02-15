@@ -55,9 +55,9 @@
 
 ## COSE DA FARE
 
-- [ ] mettere a posto lo share pag 17
+- [x] mettere a posto lo share pag 17
 - [ ] calcolare la quota con logica del prof
-- [ ] mettere a posto i canali (canali maiuscoli minuscoli #keyword)
+- [x] mettere a posto i canali (canali maiuscoli minuscoli #keyword)
 - [ ] mettere i video
 - [ ] refresh live ogni tot metri invece che secondi
 - [ ] bug creazione canali

@@ -2,10 +2,14 @@ import Post from "../post/Post";
 import "./posts.css";
 import { useQuery } from "react-query";
 import { makeRequest } from "../../axios";
-import { useState } from "react";
+import { useContext } from "react";
+import { AuthContext } from "../../context/Authcontext";
 
 
 const Posts = ({userId, channelname}) => { 
+
+  const currentuser = useContext(AuthContext);
+  
 
  const { isLoading: postsLoading, error: postsError, data: postsData } = useQuery(
    ["posts", userId, channelname],
@@ -19,7 +23,7 @@ const Posts = ({userId, channelname}) => {
 
  // use query for users to get routeCoordinates
  const { isLoading: userLoading, error: userError, data: userData } = useQuery(["users"], () =>
-     makeRequest.get("/users/find/" + userId).then((res) => {
+     makeRequest.get("/users/find/" + currentuser.currentUser._id).then((res) => {
         return res.data;
       })
     );

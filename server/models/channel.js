@@ -17,6 +17,14 @@ const channelSchema = new mongoose.Schema({
   coverPic: {
     type: String,
   },
+  isHashtag: {
+    type: Boolean,
+    default: false,
+  },
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
 
   // Add other fields as needed
 });

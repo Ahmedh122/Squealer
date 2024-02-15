@@ -84,7 +84,7 @@ const {
   
   
 
-  const { isLoading: load, data: dat } = useQuery(["users"], () =>
+  const { isLoading: load, data: dat } = useQuery(["usersshare"], () =>
     makeRequest.get("/users/find/" + currentUser._id).then((res) => {
       //console.log(res.data);
       return res.data;
@@ -144,15 +144,47 @@ const {
     }
   }, [desc, file, dataQuota]);
 
+  const hashtagmutation = useMutation(
+    newChannel => {
+      return makeRequest
+        .post("/channels", newChannel)
+        .then((res) => res.data);
+    },
+    {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries(["channels"]);
+      },
 
+      onError: (error) => {
+        alert(error.response.data);
+      }
+    }
+  );
 
   const handleClick = async (e) => {
     e.preventDefault();
     let imgUrl = "";
     //let position = "";
     if (file) imgUrl = await upload();
-    //if (markerPosition) position = await upload();
-    //console.log("markerpos is (handleClick) :"+markerPosition);
+  
+    // Check if the description contains a hashtag
+    const hashtagPattern = /#\w+/g;
+    const hashtags = desc.match(hashtagPattern);
+    if (hashtags) {
+      for (let i = 0; i < hashtags.length; i++) {
+        const newChannel = {
+          channelname: hashtags[i].substring(1),
+          channelpic: "",
+          coverpic: "",
+          admin: currentUser._id,
+          isHashtag: true,
+        };
+        channelname = hashtags[i].substring(1);
+        hashtagmutation.mutate(newChannel);
+      }
+    }
+
+    // Call the mutation
     mutation.mutate({
       desc,
       img: imgUrl,
@@ -209,10 +241,14 @@ const {
       });
       setWatchId(id);
       await makeRequest.put("/users/update/" , { islive: true });
+      queryClient.invalidateQueries(["usersshare"]);
+      queryClient.invalidateQueries(["usersnavbar"]);
       queryClient.invalidateQueries(["users"]);
     } else {
       navigator.geolocation.clearWatch(watchId);
       await makeRequest.put("/users/update/" , { islive: false });
+      queryClient.invalidateQueries(["usersshare"]);
+      queryClient.invalidateQueries(["usersnavbar"]);
       queryClient.invalidateQueries(["users"]);
       coordmutation.mutate([])
       setCurrentLivePostId(null);
@@ -272,6 +308,8 @@ const {
     return makeRequest.put("/users/position",updateCoords).then(res => res.data);
   }, {
     onSuccess: () => {
+      queryClient.invalidateQueries(["usersshare"]);
+      queryClient.invalidateQueries(["usersnavbar"]);
       queryClient.invalidateQueries(["users"]);
     },
   });
@@ -313,6 +351,11 @@ const {
   }, [thisrouteCoordinates]); // Dependency on thisrouteCoordinates
   
 
+  const handleTags = () => {
+    
+  }
+
+
   return (
     <div className="Share">
       <div className="containerShare">
@@ -328,6 +371,9 @@ const {
               />
             </div>
           )}
+          <div className="rightShare">
+            
+          </div>
         </div>
         <div className="middleShare">
           {file && <img alt="" src={URL.createObjectURL(file)} />}
@@ -365,7 +411,7 @@ const {
               <img src={Map} alt="" />
               <span>Add Place</span>
             </div>
-            <div className="itemShare">
+            <div className="itemShare" onClick={handleTags}>
               <img src={Friend} alt="" />
               <span>Tag Friends</span>
             </div>
