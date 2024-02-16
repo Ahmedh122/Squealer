@@ -56,13 +56,13 @@
 ## COSE DA FARE
 
 - [x] messaggi ad un @individuo
-- [ ] refresh live ogni tot metri invece che secondi
-- [ ] errore 403 del delete post vecchio live
+- [x] refresh live ogni tot metri invece che secondi
+- [x] errore 403 del delete post vecchio live
 - [x] bug creazione canali
 - [x] Tipo di account: normale, verificato, professional, moderatore squealer
 - [x] suono notifica
-- [ ] channel riga 150 test
-- [ ] follow nella rightbar
+- [x] channel riga 150 test
+- [x] follow nella rightbar
 
 
 

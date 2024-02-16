@@ -330,30 +330,24 @@ const {
 
   //TIMED POST LOCATION
   useEffect(() => {
-    const intervalId2 = setInterval(() => {
-      if (dat.islive) {
-        setMarkerPosition([currentlat, currentlng]);
-        var newposition = {lat : currentlat, lng : currentlng}  
-        mutation.mutate({ desc:"im here", position: newposition, channelname: "MAPPA", islive: true});
-        setRouteCoordinates(prevCoordinates => {
-          const newPosition = [currentlat, currentlng];
-          const alreadyExists = prevCoordinates.some(coord => coord[0] === newPosition[0] && coord[1] === newPosition[1]);
-          if (!alreadyExists) {
-            return [...prevCoordinates, newPosition];
-          } else {
-            return prevCoordinates;
-          }
-        });
-        if (lastLivePostId) {
-          deleteMutation.mutate(lastLivePostId);
+    if (dat.islive) {
+      setMarkerPosition([currentlat, currentlng]);
+      var newposition = {lat : currentlat, lng : currentlng}  
+      mutation.mutate({ desc:"im here", position: newposition, channelname: "MAPPA", islive: true});
+      setRouteCoordinates(prevCoordinates => {
+        const newPosition = [currentlat, currentlng];
+        const alreadyExists = prevCoordinates.some(coord => coord[0] === newPosition[0] && coord[1] === newPosition[1]);
+        if (!alreadyExists) {
+          return [...prevCoordinates, newPosition];
+        } else {
+          return prevCoordinates;
         }
-        
-      } 
-    }, 10000); // 60000 milliseconds = 1 minute  
-  
-    // Clear the interval when the component is unmounted
-    return () => clearInterval(intervalId2);
-  }, [mutation]); // Dependencies
+      });
+      if (lastLivePostId) {
+        deleteMutation.mutate(lastLivePostId);
+      }
+    }
+  }, [currentlat, currentlng]); // Effect runs when currentlat or currentlng changes
   
   // New useEffect hook // NON SO SE MI PIACE QUESTO
   useEffect(() => {

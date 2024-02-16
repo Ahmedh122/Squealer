@@ -148,7 +148,7 @@ const Channel = () => {
               </div>
             </div>
             {(currentUser._id === data.admin._id ||
-              subscriptionData.includes(currentUser._id)) &&  /*!data.isHashtag && !data.isAdmin &&*/ (
+              subscriptionData.includes(currentUser._id)) &&  !data.isHashtag && !data.isAdmin && (
               <Share channelname={channelname} />
             )}
             <Posts channelname={channelname} />
