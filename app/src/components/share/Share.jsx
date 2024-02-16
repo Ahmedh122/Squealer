@@ -85,11 +85,9 @@ const {
 
   const { isLoading: load, data: dat } = useQuery(["usersshare"], () =>
     makeRequest.get("/users/find/" + currentUser._id).then((res) => {
-      //console.log(res.data);
       return res.data;
     })
   );
-
 // acoustics
   const context = new (window.AudioContext || window.webkitAudioContext)();
   const oscillator = context.createOscillator();
@@ -330,7 +328,7 @@ const {
 
   //TIMED POST LOCATION
   useEffect(() => {
-    if (dat.islive) {
+    if (dat && dat.islive) {
       setMarkerPosition([currentlat, currentlng]);
       var newposition = {lat : currentlat, lng : currentlng}  
       mutation.mutate({ desc:"im here", position: newposition, channelname: "MAPPA", islive: true});
