@@ -23,10 +23,10 @@ import Predit from "../../components/profileEdit/Profileedit";
 const Profile = () => {
 
   const userId = useLocation().pathname.split("/")[2];
-  console.log("userId",userId);
+  //console.log("userId",userId);
 
   const { currentUser } = useContext(AuthContext);
-  console.log("currentUser",currentUser);
+  //console.log("currentUser",currentUser);
   const { isLoading, data } = useQuery(["usersprofile"], () =>
     makeRequest.get("/users/find/" + userId).then((res) => {
       console.log("res",res.data);
