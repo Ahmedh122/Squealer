@@ -59,7 +59,7 @@
 - [ ] refresh live ogni tot metri invece che secondi
 - [ ] errore 403 del delete post vecchio live
 - [x] bug creazione canali
-- [ ] Tipo di account: normale, verificato, professional, moderatore squealer
+- [x] Tipo di account: normale, verificato, professional, moderatore squealer
 - [x] suono notifica
 - [ ] channel riga 150 test
 - [ ] follow nella rightbar

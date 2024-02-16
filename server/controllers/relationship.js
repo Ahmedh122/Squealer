@@ -7,10 +7,19 @@ export const getRelationships = async (req, res) => {
       followedUserId: req.query.followedUserId,
     });
 
+    const relationship2 = await Relationship.find({
+      followerUserId: req.query.followerUserId,
+    });
+
     const followerUserIds = relationships.map(
       (relationship) => relationship.followerUserId
     );
-    return res.status(200).json(followerUserIds);
+
+    const followedUserIds = relationship2.map(
+      (relationship) => relationship.followedUserId
+    );
+
+    return res.status(200).json({ followers: followerUserIds, following: followedUserIds });
   } catch (error) {
     console.error(error);
     return res.status(500).json(error.message || "Internal Server Error");

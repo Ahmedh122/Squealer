@@ -117,7 +117,7 @@ const Profile = () => {
                   <>
                     {userId !== currentUser._id && (
                       <button onClick={handleFollow}>
-                        {relationshipData.includes(currentUser._id)
+                        {relationshipData.following.includes(currentUser._id)
                           ? "Following"
                           : "Follow"}
                       </button>
