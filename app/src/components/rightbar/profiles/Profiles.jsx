@@ -39,7 +39,6 @@ const Channels = () => {
                 following.includes(profile._id)
             )
             .map((profile) => { 
-              console.log(profile);
               return <Profile profile={profile} key={profile._id}/>
             })}
     </div>

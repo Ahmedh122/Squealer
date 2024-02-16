@@ -55,13 +55,14 @@ const Profile = () => {
       onSuccess: () => {
         // Invalidate and refetch
         queryClient.invalidateQueries(["relationship"]);
+        queryClient.invalidateQueries(["relationshipz"]);
       },
     }
   );
 
   const handleFollow = () => {
-    console.log(relationshipData.includes(currentUser._id));
-    mutation.mutate(relationshipData.includes(currentUser._id));
+    console.log("yolo",relationshipData);
+    mutation.mutate(relationshipData.followers.includes(currentUser._id));
   };
 
   //console.log(data);
@@ -117,7 +118,7 @@ const Profile = () => {
                   <>
                     {userId !== currentUser._id && (
                       <button onClick={handleFollow}>
-                        {relationshipData.following.includes(currentUser._id)
+                        {relationshipData.followers.includes(currentUser._id)
                           ? "Following"
                           : "Follow"}
                       </button>

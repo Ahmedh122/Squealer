@@ -2,7 +2,6 @@ import "./profile.css";
 import React from "react";
 
 const Profile = ({ profile }) => {
-  console.log("suca",profile);
   const redirectToProfile = (profilename) => {
     window.location.href = `/profile/${profilename}`;
   };
