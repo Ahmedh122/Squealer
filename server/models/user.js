@@ -41,6 +41,18 @@ const userSchema = new mongoose.Schema({
   routeCoordinates: {
     type: [[Number]],
   },
+  isNormal: {
+    type: Boolean,
+    default: true,
+  },
+  isPro: {
+    type: Boolean,
+    default: false,
+  },
+  isMod: {
+    type: Boolean,
+    default: false,
+  },
   // Add other fields as needed
 });
 
