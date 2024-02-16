@@ -33,8 +33,7 @@ let currentlng = 0
 
 
 
-const Share = ({ channelname }) => {
-
+const Share = ({ channelname , Idreciver }) => {
   const [file, setFile] = useState(null);
   const [desc, setDesc] = useState("");
   const [randDesc, setrandDesc] = useState("");
@@ -91,7 +90,15 @@ const {
     })
   );
 
+// acoustics
+  const context = new (window.AudioContext || window.webkitAudioContext)();
+  const oscillator = context.createOscillator();
+  const gainNode = context.createGain();
 
+  oscillator.connect(gainNode);
+  gainNode.connect(context.destination);
+  oscillator.frequency.value = 440; // Frequency for the beep sound
+  gainNode.gain.value = 0.1; // Volume for the beep sound
 
   const mutation = useMutation(newPost => {
     return makeRequest.post("/posts", newPost);
@@ -104,6 +111,9 @@ const {
       }
       // Invalidate and refetch
       queryClient.invalidateQueries(["posts"]);
+       // Play beep sound
+       oscillator.start(context.currentTime);
+       oscillator.stop(context.currentTime + 0.1); // Beep sound duration
     },
   });
 
@@ -190,6 +200,7 @@ const {
       img: imgUrl,
       position: markerPosition,
       channelname,
+      ...(Idreciver !== undefined && Idreciver !== null && { Idreciver : Idreciver }),
     });
       // Call modifyQuota on the server
   try {

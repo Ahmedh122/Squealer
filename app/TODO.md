@@ -55,14 +55,18 @@
 
 ## COSE DA FARE
 
-- [x] mettere a posto lo share pag 17
-- [ ] calcolare la quota con logica del prof
-- [x] mettere a posto i canali (canali maiuscoli minuscoli #keyword)
-- [ ] mettere i video
+- [x] messaggi ad un @individuo
 - [ ] refresh live ogni tot metri invece che secondi
-- [ ] bug creazione canali
 - [ ] errore 403 del delete post vecchio live
+- [x] bug creazione canali
 - [ ] Tipo di account: normale, verificato, professional, moderatore squealer
+- [x] suono notifica
+- [ ] channel riga 150 test
+- [ ] follow nella rightbar
+
+
+
+- [ ] calcolare la quota con logica del prof
+- [ ] mettere i video
 - [ ] Funzioni di lettura senza login Solo messaggi di canali ufficiali Squealer
-- [ ] suono notifica
 - [ ] css tutto apposto , tweak vari

@@ -132,7 +132,7 @@ const Profile = () => {
                 {userId === currentUser._id && <Modal />}
               </div>
             </div>
-            <Share />
+            <Share Idreciver={userId} />
             <Posts userId={userId} />
           </div>
         </>

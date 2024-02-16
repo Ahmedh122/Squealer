@@ -46,6 +46,12 @@ const postSchema = new mongoose.Schema({
     },
   ],
 
+  Idreciver: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: null,
+  },
+
 
 });
 

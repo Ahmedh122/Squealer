@@ -3,8 +3,11 @@ import Post from "../models/post.js";
 import Relationship from "../models/relationship.js";
 import Subscription from "../models/subscription.js";
 
+
+
 export const getPosts = async (req, res) => {
-  const { userId, channelname } = req.query;
+  const { userId, channelname, currentuser } = req.query;
+  console.log("profilo di :",userId, channelname, "sei loggato come:",currentuser);
   const token = req.cookies.accessToken;
 
   try {
@@ -17,7 +20,15 @@ export const getPosts = async (req, res) => {
     if (userId !== "undefined") {
       // If userId is defined, fetch posts for a specific user
       query = {
-        userId: userId,
+        $or: [
+          { userId: userId }, // i post che ha fatto lui
+          {
+            $and: [
+              { userId: currentuser }, // i post che ha fatto il currentuser
+              { Idreciver: userId }, // i post che ha ricevuto dal currentuser
+            ],
+          },
+        ],
       };
     } else if (channelname !=="undefined") {
       // If channelname is defined, fetch posts for a specific channel
@@ -66,6 +77,8 @@ export const getPosts = async (req, res) => {
     return res.status(500).json(error.message || "Internal Server Error");
   }
 };
+
+
 export const addPost = async (req, res) => {
  
   const token = req.cookies.accessToken;
@@ -84,7 +97,7 @@ export const addPost = async (req, res) => {
       userId: userInfo.id,
       position: position,
       islive : req.body.islive || false,
-      
+      Idreciver: req.body.Idreciver || null,
       channelname: req.body.channelname || "",
     });
     //console.log(newPost);  
