@@ -222,7 +222,7 @@ const Post = ({ post, user}) => {
   useEffect(() => { // Check if post and currentUser are defined
       const observer = new IntersectionObserver((entries) => {
         // If the post is in the viewport, record the view
-        if (entries[0].isIntersecting && currentUser && post.userId !== currentUser._id) {
+        if (entries[0].isIntersecting && currentUser) {
           makeRequest.post(`/views?postId=${post._id}&userId=${currentUser._id}`)
             .then(response => {
               console.log('View recorded successfully');
