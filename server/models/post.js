@@ -52,6 +52,20 @@ const postSchema = new mongoose.Schema({
     default: null,
   },
 
+  controvertial:{
+    type: Boolean,
+    default: false,
+  },
+
+  public: {
+    type: Boolean,
+    default: false,
+  }, 
+  
+  vid: {
+    type: String,
+  },
+
 
 });
 

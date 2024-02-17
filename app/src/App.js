@@ -6,6 +6,7 @@ import Rightbar from "./components/rightbar/Rightbar";
 import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
 import Channel from "./pages/channel/Channel";
+import General from "./pages/general/General";
 import {
   createBrowserRouter,
   Outlet,
@@ -41,16 +42,19 @@ function App() {
     );
   };
 
-  const ProtectedRoute = ({ children }) => {
-    if (!currentUser) {
-      return <Navigate to="/login" />;
-    }
+const ProtectedRoute = ({ children }) => {
+  if (!currentUser) {
+    return (
+    
+        <Navigate to="/general" />
+      
+    );
+  }
 
-    return children;
-  };
+  return children;
+};
 
   const router = createBrowserRouter([
-
     {
       path: "/",
       element: (
@@ -58,28 +62,33 @@ function App() {
           <Layout />
         </ProtectedRoute>
       ),
-      children:[
+      children: [
         {
-          path : "/",
-          element: <Home/>,
+          path: "/",
+          element: <Home />,
         },
         {
           path: "/profile/:id",
-          element: <Profile/>,
+          element: <Profile />,
         },
         {
           path: "/channel/:channelname",
-          element: <Channel/>,
-        }
-      ]
+          element: <Channel />,
+        },
+      ],
     },
     {
       path: "/login",
-      element: <Login/>,
+      element: <Login />,
     },
     {
       path: "/register",
-      element: <Register/>,
+      element: <Register />,
+    },
+
+    {
+      path: "/general",
+      element: <QueryClientProvider client={queryClient}><General /></QueryClientProvider>, 
     },
   ]);
 

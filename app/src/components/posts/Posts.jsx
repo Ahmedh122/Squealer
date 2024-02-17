@@ -12,7 +12,7 @@ const Posts = ({userId, channelname}) => {
     ["posts", userId, channelname],
     () =>
       makeRequest
-        .get(`/posts?userId=${userId}&channelname=${channelname}&currentuser=${currentuser.currentUser._id}`)
+        .get(`/posts/getPosts?userId=${userId}&channelname=${channelname}&currentuser=${currentuser.currentUser._id}`)
         .then((res) => {
           return res.data;
         })

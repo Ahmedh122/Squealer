@@ -5,7 +5,7 @@ import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { Link } from "react-router-dom";
+import { Link, createRoutesFromElements } from "react-router-dom";
 import Comments from "../comments/Comments";
 import { useState } from "react";
 import moment from "moment";
@@ -39,7 +39,40 @@ const Post = ({ post, user}) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
  // const [thisrouteCoordinates, setRouteCoordinates] = useState(user.routeCoordinates);
-  
+  const [isVideoInViewport, setIsVideoInViewport] = useState(false);
+  const videoRef = useRef(null);
+  const handleVideoIntersection = (entries) => {
+    const [entry] = entries;
+    setIsVideoInViewport(entry.isIntersecting);
+
+    if (videoRef.current && videoRef.current instanceof HTMLVideoElement) {
+      if (entry.isIntersecting) {
+        videoRef.current.play();
+      } else {
+        videoRef.current.pause();
+      }
+    }
+  };
+
+  useEffect(() => {
+    const options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.5, // Adjust this threshold based on when you want the video to start playing
+    };
+
+    const observer = new IntersectionObserver(handleVideoIntersection, options);
+
+    if (videoRef.current) {
+      observer.observe(videoRef.current);
+    }
+
+    return () => {
+      if (videoRef.current) {
+        observer.unobserve(videoRef.current);
+      }
+    };
+  }, [videoRef]);
 
   const { currentUser } = useContext(AuthContext);
 
@@ -108,13 +141,21 @@ const Post = ({ post, user}) => {
   );
 
   const handleLike = () => {
-    console.log("currentUser:", currentUser);
-    console.log("datalikes in handleLike:", datalikes);
-    mutation.mutate(datalikes.includes(currentUser._id));
+    if (currentUser) {
+      console.log("currentUser:", currentUser);
+      console.log("datalikes in handleLike:", datalikes);
+      mutation.mutate(datalikes.includes(currentUser._id));
+    } else {
+      console.log("currentUser is undefined");
+    }
   };
-
+  
   const handleDislike = () => {
-    dislikemutation.mutate(datadislikes.includes(currentUser._id));
+    if (currentUser) {
+      dislikemutation.mutate(datadislikes.includes(currentUser._id));
+    } else {
+      console.log("currentUser is undefined");
+    }
   };
 
   const handleDelete = () => {
@@ -178,30 +219,40 @@ const Post = ({ post, user}) => {
 
   const postRef = useRef();
 
- useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      // If the post is in the viewport, record the view
-      if (entries[0].isIntersecting) {
-        makeRequest.post(`/views/${post._id}/${currentUser._id}`)
-          .then(response => {
-            console.log('View recorded successfully');
-          })
-          .catch(error => {
-            console.error('Error recording view:', error);
-          });
+  useEffect(() => { // Check if post and currentUser are defined
+      const observer = new IntersectionObserver((entries) => {
+        // If the post is in the viewport, record the view
+        if (entries[0].isIntersecting && currentUser && post.userId !== currentUser._id) {
+          makeRequest.post(`/views?postId=${post._id}&userId=${currentUser._id}`)
+            .then(response => {
+              console.log('View recorded successfully');
+            })
+            .catch(error => {
+              console.error('Error recording view:', error);
+            });
+        }
+        else {
+          makeRequest.post(`/views?postId=${post._id}&userId=${undefined}`)
+            .then(response => {
+              console.log('View recorded successfully');
+            })
+            .catch(error => {
+              console.error('Error recording view:', error);
+            });
+        }
       }
-    });
-
-    if (postRef.current) {
-      observer.observe(postRef.current);
-    }
-
-    return () => {
+      );
+  
       if (postRef.current) {
-        observer.unobserve(postRef.current);
+        observer.observe(postRef.current);
       }
-    };
-  }, [post._id, currentUser._id]);
+  
+      return () => {
+        if (postRef.current) {
+          observer.unobserve(postRef.current);
+        }
+      };
+  }, [post._id]); // Add post and currentUser to the dependency array
 
 
 
@@ -264,12 +315,19 @@ const Post = ({ post, user}) => {
           </a>
           )}
           <img src={"/upload/" + post.img} alt="" />
-        </div>
+            
+              {post.vid && (
+                <video height="500" width="800" controls muted ref={videoRef}>
+                  <source src={"/upload/" + post.vid} type="video/mp4" />
+                </video>
+              )}
+            
+          </div>
         <div className="infoPost">    
           <div className="itemPost">
             {isLoadinglikes ? (
               "loading"
-            ) : datalikes?.includes(currentUser._id) ? (
+            ) : currentUser && datalikes?.includes(currentUser._id) ? (
               <FavoriteOutlinedIcon
                 style={{ color: "red" }}
                 onClick={handleLike}
@@ -282,7 +340,7 @@ const Post = ({ post, user}) => {
           <div className="itemPost">
             {isLoadingdislikes ? (
               "loading"
-            ) : datadislikes?.includes(currentUser._id) ? (
+            ) : currentUser && datadislikes?.includes(currentUser._id) ? (
               <FavoriteOutlinedIcon
                 style={{ color: "purple", rotate: "180deg" }}
                 onClick={handleDislike}

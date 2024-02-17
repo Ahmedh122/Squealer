@@ -14,7 +14,7 @@ import L from 'leaflet';
 import { useEffect } from "react";
 import { useQuery } from "react-query";
 import axios from "axios";
-
+import VideoThumbnail from "react-video-thumbnail";
 
 let DefaultIcon = L.icon({
   iconUrl: icon,
@@ -43,6 +43,24 @@ const Share = ({ channelname , Idreciver }) => {
   const [lastLivePostId, setLastLivePostId] = useState(null);
   const [currentLivePostId, setCurrentLivePostId] = useState(null);
   const [thisrouteCoordinates, setRouteCoordinates] = useState([]);
+  const [blobURL, setBlobURL] = useState("");
+
+    const handleFileChange = async (e) => {
+      const selectedFile = e.target.files[0];
+      const maxSize = 100 * 1024 * 1024; // 100MB in bytes
+      if (selectedFile.size > maxSize) {
+        alert(
+          "File size exceeds the maximum allowed size (100MB). Please choose a smaller file."
+        );
+        return;
+      }
+      setFile(selectedFile);
+      let blobURL = "";
+      if (selectedFile.type.startsWith("video/")) {
+        blobURL = URL.createObjectURL(selectedFile);
+        setBlobURL(blobURL);
+      }
+    };
 
 
 const {
@@ -172,8 +190,15 @@ const {
   const handleClick = async (e) => {
     e.preventDefault();
     let imgUrl = "";
+    let vidUrl = "";
     //let position = "";
-    if (file) imgUrl = await upload();
+    if (file) {
+    if (file.type.startsWith("image/")) {
+      imgUrl = await upload();
+    } else if (file.type.startsWith("video/")) {
+      vidUrl = await upload(); // Assuming the server returns the video URL
+    }
+  }
   
     // Check if the description contains a hashtag
     const hashtagPattern = /#\w+/g;
@@ -196,6 +221,7 @@ const {
     mutation.mutate({
       desc,
       img: imgUrl,
+       vid: vidUrl,
       position: markerPosition,
       channelname,
       ...(Idreciver !== undefined && Idreciver !== null && { Idreciver : Idreciver }),
@@ -379,7 +405,16 @@ const {
           </div>
         </div>
         <div className="middleShare">
-          {file && <img alt="" src={URL.createObjectURL(file)} />}
+          {file && file.type.startsWith("image/") && (
+            <img alt="" src={URL.createObjectURL(file)} />
+          )}
+          {file && file.type.startsWith("video/") && (
+            <VideoThumbnail
+              key={Date.now()}
+              videoUrl={blobURL}
+              thumbnailHandler={(thumbnail) => console.log(thumbnail)}
+            />
+          )}
           {showMap && (
             <MapContainer
               center={[currentlat, currentlng]}
@@ -402,7 +437,7 @@ const {
               type="file"
               id="file"
               style={{ display: "none" }}
-              onChange={(e) => setFile(e.target.files[0])}
+              onChange={handleFileChange}
             />
             <label htmlFor="file">
               <div className="itemShare">

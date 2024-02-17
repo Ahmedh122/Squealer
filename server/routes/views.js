@@ -6,6 +6,6 @@ import { addView } from "../controllers/views.js";
 const router = express.Router();
 
 
-router.post("/:postId/:userId", addView);
+router.post("/", addView);
 
 export default router;

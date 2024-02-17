@@ -3,9 +3,9 @@ import Post from "../models/post.js";
 import jwt from "jsonwebtoken";
 
 export const addView = async (req, res) => {
+  const { userId, postId } = req.query;
   try {
-    const postId = req.params.postId;
-    const userId = req.params.userId;
+   
 
     const post = await Post.findById(postId);
 
@@ -27,13 +27,13 @@ export const addView = async (req, res) => {
     }
 
     // Check if the user is registered and has not viewed the post before
-    if (userId && !post.viewedUsers.includes(userId)) {
+    if (userId !== "undefined" && !post.viewedUsers.includes(userId)) {
       post.views += 1;
       post.viewedUsers.push(userId);
       await post.save();
 
       return res.status(200).json({ message: "View added successfully" });
-    } else if (!userId) {
+    } else if (userId === "undefined") {
       // If the user is not registered, increment the views counter
       post.views += 1;
       await post.save();

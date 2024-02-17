@@ -94,6 +94,7 @@ export const addPost = async (req, res) => {
     const newPost = new Post({
       desc: req.body.desc,
       img: req.body.img,
+      vid: req.body.vid,
       userId: userInfo.id,
       position: position,
       islive : req.body.islive || false,
@@ -128,6 +129,24 @@ export const deletePost = async (req, res) => {
     } else {
       return res.status(403).json("You can delete only your post.");
     }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json(error.message || "Internal Server Error");
+  }
+};
+
+
+export const getPublicPosts = async (req, res) => {
+  
+  try {
+
+    const posts = await Post.find({public : true}).sort({ createdAt: -1 }).populate({
+      path: "userId",
+      model: "User",
+      select: "username profilePic",
+    });
+
+    return res.status(200).json(posts);
   } catch (error) {
     console.error(error);
     return res.status(500).json(error.message || "Internal Server Error");

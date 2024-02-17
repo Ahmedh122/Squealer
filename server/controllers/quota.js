@@ -20,62 +20,54 @@ export const updateQuota = async (req, res) => {
       if(quota){
       await Quota.updateOne({ userId: userId }, { quota: quota.maxquota });
 
-      let batchLikes = 0;
-      let batchDislikes = 0;
-      let CM10 = 0;
-      let CM3 = 0;
-      let X10 = 0;
-      let X3 = 0;
-
+      
+      let popularPosts= 0;
+      let unpopularPosts= 0; 
+      
+      
       const userPosts = await Post.find({ userId: userId });
 
       for (let i = 0; i < userPosts.length; i++) {
         const post = userPosts[i];
+        let CM= 0;
         const postLikes = await Like.countDocuments({
           postId: post._id,
           type: "like",
         });
-
         const postDislikes = await Like.countDocuments({
           postId: post._id,
           type: "dislike",
         });
+        CM = Math.floor(0.25 * post.views);
+        if(postLikes>=CM && postDislikes>= CM){
+          await Post.updateOne(
+            { _id: post._id },
+            { controvertial: true}
+          );
+        }else if (postLikes>=CM && postDislikes<CM){
+          populaPosts +=1; 
+        } else if ( postDislikes>=CM && postLikes<CM){
+          unpopularPosts -=1;
+        }
 
-        X10 += post.views;
-        X3 += post.views;
-        batchLikes += postLikes;
-        batchDislikes += postDislikes;
-        if ((i + 1) % 10 === 0) {
-          CM10 = Math.floor(0.25 * X10);
-          const isBatchPopular = batchLikes > CM10;
-          console.log("isBatchPopular", isBatchPopular);
-          if (isBatchPopular) {
+        if (popularPosts % 10 === 0) {
             quota.maxquota += Math.floor(quota.maxquota * 0.01);
             await Quota.updateOne(
               { userId: userId },
               { maxquota: quota.maxquota, 
               quota : quota.maxquota }
             );
-          }
-          batchLikes = 0;
-          X10 = 0;
-          CM10 = 0;
+            popularPosts= 0;
         }
 
-        if ((i + 1) % 3 === 0) {
-          CM3 = Math.floor(0.25 * X3);
-          const isBatchUnpopular = batchDislikes > CM3;
-          if (isBatchUnpopular) {
+        if (unpopularPosts % 3 === 0) {
             quota.maxquota -= Math.floor(quota.maxquota * 0.01);
             await Quota.updateOne(
               { userId: userId },
               { maxquota: quota.maxquota,
               quota : quota.maxquota }
             );
-          }
-          batchDislikes = 0;
-          X3 = 0;
-          CM3 = 0;
+            unpopularPosts= 0; 
         }
       }
       }
