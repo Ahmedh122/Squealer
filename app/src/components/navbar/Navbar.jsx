@@ -50,6 +50,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       await logout();
+       window.location.href = `/login`;
     } catch (err) {
       console.error(err.response.data);
     }

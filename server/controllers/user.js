@@ -4,7 +4,7 @@ import mongoose from "mongoose";// Assuming you have a User model for MongoDB
 
 export const getUser = async (req, res) => {
   const userId = req.params.userId;
-  //console.log("userid" , userId);
+ 
   try {
      const user = await User.findOne({ _id: userId });
     if (!user) {
@@ -21,7 +21,7 @@ export const getUser = async (req, res) => {
 };
 export const updateUser = async (req, res) => {
   const token = req.cookies.accessToken;
-  console.log(req.body);
+ 
 
   if (!token) {
     return res.status(401).json("Not authenticated!");
@@ -107,7 +107,7 @@ export const getCoords = async (req, res) => {
 
 export const updateCoords = async (req, res) => {
   const token = req.cookies.accessToken;
-  console.log(req.body, "yolo");
+
 
   if (!token) {
     return res.status(401).json("Not authenticated!");
@@ -134,7 +134,7 @@ export const updateCoords = async (req, res) => {
       const updateFields = {};
 
       if (req.body || req.body == []) {
-        console.log("updating")
+       
         updateFields.routeCoordinates = req.body;
       }
 
@@ -143,7 +143,7 @@ export const updateCoords = async (req, res) => {
         { $set: updateFields },
         { new: true, runValidators: true}
       );
-      console.log('updatedUser:', updatedUser);
+    
       return res.status(200).json({
         message: "User has been updated.",
         _id: updatedUser._id,

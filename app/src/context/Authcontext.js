@@ -22,20 +22,18 @@ export const AuthContextProvider = ({ children }) => {
       console.error(error);
     }
   };
-
-  const logout = async () => {
-    try {
-      const res = axios.post("http://localhost:8800/api/auth/logout", {
-        withCredentials: true,
-      });
-      setCurrentUser(null);
-      localStorage.removeItem("user");
-    } catch (error) {
-      console.error(error);
-    }
-    
-    
-  };
+const logout = async () => {
+  try {
+    // Add 'await' to wait for the promise to resolve
+    await axios.post("http://localhost:8800/api/auth/logout", null, {
+      withCredentials: true,
+    });
+    setCurrentUser(null);
+    localStorage.removeItem("user");
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   useEffect(() => {
     localStorage.setItem("user", JSON.stringify(currentUser));

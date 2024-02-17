@@ -219,40 +219,32 @@ const Post = ({ post, user}) => {
 
   const postRef = useRef();
 
-  useEffect(() => { // Check if post and currentUser are defined
-      const observer = new IntersectionObserver((entries) => {
-        // If the post is in the viewport, record the view
-        if (entries[0].isIntersecting && currentUser) {
-          makeRequest.post(`/views?postId=${post._id}&userId=${currentUser._id}`)
-            .then(response => {
-              console.log('View recorded successfully');
-            })
-            .catch(error => {
-              console.error('Error recording view:', error);
-            });
-        }
-        else {
-          makeRequest.post(`/views?postId=${post._id}&userId=${undefined}`)
-            .then(response => {
-              console.log('View recorded successfully');
-            })
-            .catch(error => {
-              console.error('Error recording view:', error);
-            });
-        }
-      }
-      );
-  
-      if (postRef.current) {
-        observer.observe(postRef.current);
-      }
-  
-      return () => {
-        if (postRef.current) {
-          observer.unobserve(postRef.current);
-        }
-      };
-  }, [post._id]); // Add post and currentUser to the dependency array
+ useEffect(() => {
+   const observer = new IntersectionObserver((entries) => {
+     if (entries[0].isIntersecting) {
+       const userId = currentUser ? currentUser._id : "undefined_user";
+       makeRequest
+         .post(`/views?postId=${post._id}&userId=${userId}`)
+         .then((response) => {
+           console.log("View recorded successfully");
+         })
+         .catch((error) => {
+           console.error("Error recording view:", error);
+         });
+     }
+   });
+
+   if (postRef.current) {
+     observer.observe(postRef.current);
+   }
+
+   return () => {
+     if (postRef.current) {
+       observer.unobserve(postRef.current);
+     }
+   };
+ }, [post._id, currentUser]);
+ // Add post and currentUser to the dependency array
 
 
 

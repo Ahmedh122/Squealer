@@ -7,7 +7,7 @@ import Subscription from "../models/subscription.js";
 
 export const getPosts = async (req, res) => {
   const { userId, channelname, currentuser } = req.query;
-  console.log("profilo di :",userId, channelname, "sei loggato come:",currentuser);
+
   const token = req.cookies.accessToken;
 
   try {
