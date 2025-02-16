@@ -8,7 +8,7 @@ import PlaceIcon from "@mui/icons-material/Place";
 import LanguageIcon from "@mui/icons-material/Language";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import Posts from "../../components/posts/Posts"
+import Posts from "../../components/posts/Posts";
 import { useContext } from "react";
 import { AuthContext } from "../../context/Authcontext";
 import { useQuery } from "react-query";
@@ -23,10 +23,10 @@ import Predit from "../../components/profileEdit/Profileedit";
 const Profile = () => {
 
   const userId = useLocation().pathname.split("/")[2];
-  //console.log("userId",userId);
+ 
 
   const { currentUser } = useContext(AuthContext);
-  //console.log("currentUser",currentUser);
+
   const { isLoading, data } = useQuery(["usersprofile"], () =>
     makeRequest.get("/users/find/" + userId).then((res) => {
       console.log("res",res.data);

@@ -6,7 +6,7 @@ const connectDB = async () => {
     
       
     });
-    console.log("Connected to MongoDB");
+    console.log("Connected to MongoDB squealer");
   } catch (error) {
     console.error("MongoDB connection error:", error);
     process.exit(1); // Exit with failure

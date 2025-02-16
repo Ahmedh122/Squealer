@@ -97,7 +97,7 @@ export const getChannellist = async (req , res) => {
         return res.json([]); // Return an empty array
       }
 
-    // Exclude sensitive information like password before sending the response
+  
     return res.json(channel);
   } catch (error) {
     console.error(error);

@@ -20,7 +20,7 @@ import { MapContainer, TileLayer, Marker , Polyline } from "react-leaflet"; // I
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef } from "react";
 
-
+import Player from "./player";
 let DefaultIcon = L.icon({
   iconUrl: icon,
   shadowUrl: iconShadow,
@@ -35,48 +35,13 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 
 
-const Post = ({ post, user}) => {
+const Post = ({ post, user, isMuted, onMuteChange }) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
- // const [thisrouteCoordinates, setRouteCoordinates] = useState(user.routeCoordinates);
-  const [isVideoInViewport, setIsVideoInViewport] = useState(false);
-  const videoRef = useRef(null);
-  const handleVideoIntersection = (entries) => {
-    const [entry] = entries;
-    setIsVideoInViewport(entry.isIntersecting);
-
-    if (videoRef.current && videoRef.current instanceof HTMLVideoElement) {
-      if (entry.isIntersecting) {
-        videoRef.current.play();
-      } else {
-        videoRef.current.pause();
-      }
-    }
-  };
-
-  useEffect(() => {
-    const options = {
-      root: null,
-      rootMargin: "0px",
-      threshold: 0.5, // Adjust this threshold based on when you want the video to start playing
-    };
-
-    const observer = new IntersectionObserver(handleVideoIntersection, options);
-
-    if (videoRef.current) {
-      observer.observe(videoRef.current);
-    }
-
-    return () => {
-      if (videoRef.current) {
-        observer.unobserve(videoRef.current);
-      }
-    };
-  }, [videoRef]);
+  
+  
 
   const { currentUser } = useContext(AuthContext);
-
-
 
   const {
     isLoadinglikes,
@@ -149,7 +114,7 @@ const Post = ({ post, user}) => {
       console.log("currentUser is undefined");
     }
   };
-  
+
   const handleDislike = () => {
     if (currentUser) {
       dislikemutation.mutate(datadislikes.includes(currentUser._id));
@@ -174,7 +139,7 @@ const Post = ({ post, user}) => {
   const [showMap, setShowMap] = useState(false);
   const [markerPosition, setMarkerPosition] = useState(null);
 
- /* const coordmutation = useMutation(updateCoords => {
+  /* const coordmutation = useMutation(updateCoords => {
     console.log("updateCoords: ", updateCoords);
     return makeRequest.put("/users/position",updateCoords).then(res => res.data);
   }, {
@@ -210,154 +175,152 @@ const Post = ({ post, user}) => {
     }
   }, [post?.position, user?.islive]);*/
 
-
-
-  
   /*useEffect(() => {
     //console.log("routeCoordinates: ", thisrouteCoordinates);
   }, [thisrouteCoordinates]);*/
 
   const postRef = useRef();
 
- useEffect(() => {
-   const observer = new IntersectionObserver((entries) => {
-     if (entries[0].isIntersecting) {
-       const userId = currentUser ? currentUser._id : "undefined_user";
-       makeRequest
-         .post(`/views?postId=${post._id}&userId=${userId}`)
-         .then((response) => {
-           console.log("View recorded successfully");
-         })
-         .catch((error) => {
-           console.error("Error recording view:", error);
-         });
-     }
-   });
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        const userId = currentUser ? currentUser._id : "undefined_user";
+        makeRequest
+          .post(`/views?postId=${post._id}&userId=${userId}`)
+          .then((response) => {
+            console.log("View recorded successfully");
+          })
+          .catch((error) => {
+            console.error("Error recording view:", error);
+          });
+      }
+    });
 
-   if (postRef.current) {
-     observer.observe(postRef.current);
-   }
+    if (postRef.current) {
+      observer.observe(postRef.current);
+    }
 
-   return () => {
-     if (postRef.current) {
-       observer.unobserve(postRef.current);
-     }
-   };
- }, [post._id, currentUser]);
- // Add post and currentUser to the dependency array
+    return () => {
+      if (postRef.current) {
+        observer.unobserve(postRef.current);
+      }
+    };
+  }, [post._id, currentUser]);
+  // Add post and currentUser to the dependency array
 
-
-
-
-
-  return ( <div ref= {postRef}>
-    <div className="Post">
-      <div className="containerPost" id="containerPost">
-        <div className="userPost">
-          <div className="userInfoPost">
-            {post.userId && (
-              <>
-                <img src={`/upload/${post.userId.profilePic}`} alt="" />
-                <div className="detailsPost">
-                  <Link
-                    to={`/profile/${post.userId._id}`}
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    <span className="namePost">{post.userId.username}</span>
-                  </Link>
-                  {post.channelname !== "" && (
+  return (
+    <div ref={postRef}>
+      <div className="Post">
+        <div className="containerPost" id="containerPost">
+          <div className="userPost">
+            <div className="userInfoPost">
+              {post.userId && (
+                <>
+                  <img src={`/upload/${post.userId.profilePic}`} alt="" />
+                  <div className="detailsPost">
                     <Link
-                      to={`/channel/${post.channelname}`}
+                      to={`/profile/${post.userId._id}`}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
-                      <span className="namePost">§ {post.channelname}</span>
+                      <span className="namePost">{post.userId.username}</span>
                     </Link>
-                  )}
-                  <span className="datePost">
-                    {moment(post.createdAt).fromNow()}
-                  </span>
-                </div>
-              </>
-            )}
-          </div>
-          <DeleteOutlinedIcon onClick={handleDelete}/>
-        </div>
-        <div className="contentPost">
-          <p>{post.desc}</p>
-          {showMap && markerPosition &&(
-            <a
-            href={`https://www.google.com/maps/search/?api=1&query=${post.position.lat},${post.position.lng}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <MapContainer
-              center={post.position}
-              zoom={17}
-              style={{ maxHeight: "500px", height: "100vh", width: "100%" }}
-              zoomControl={false}
-              scrollWheelZoom={false}
-            >
-              {user.routeCoordinates.length>0 && < Polyline positions={user.routeCoordinates} color='blue' />}
-              <Marker position={markerPosition} />
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-              />
-            </MapContainer>
-          </a>
-          )}
-          <img src={"/upload/" + post.img} alt="" />
-            
-              {post.vid && (
-                <video height="500" width="800" controls muted ref={videoRef}>
-                  <source src={"/upload/" + post.vid} type="video/mp4" />
-                </video>
+                    {post.channelname !== "" && (
+                      <Link
+                        to={`/channel/${post.channelname}`}
+                        style={{ textDecoration: "none", color: "inherit" }}
+                      >
+                        <span className="namePost">§ {post.channelname}</span>
+                      </Link>
+                    )}
+                    <span className="datePost">
+                      {moment(post.createdAt).fromNow()}
+                    </span>
+                  </div>
+                </>
               )}
-            
+            </div>
+            <DeleteOutlinedIcon onClick={handleDelete} />
           </div>
-        <div className="infoPost">    
-          <div className="itemPost">
-            {isLoadinglikes ? (
-              "loading"
-            ) : currentUser && datalikes?.includes(currentUser._id) ? (
-              <FavoriteOutlinedIcon
-                style={{ color: "red" }}
-                onClick={handleLike}
-              />
-            ) : (
-              <FavoriteBorderOutlinedIcon onClick={handleLike} />
+          <div className="contentPost">
+            <p>{post.desc}</p>
+            {showMap && markerPosition && (
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${post.position.lat},${post.position.lng}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <MapContainer
+                  center={post.position}
+                  zoom={17}
+                  style={{ maxHeight: "500px", height: "100vh", width: "100%" }}
+                  zoomControl={false}
+                  scrollWheelZoom={false}
+                >
+                  {user.routeCoordinates.length > 0 && (
+                    <Polyline positions={user.routeCoordinates} color="blue" />
+                  )}
+                  <Marker position={markerPosition} />
+                  <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                  />
+                </MapContainer>
+              </a>
             )}
-            {datalikes?.length} Likes
-          </div>
-          <div className="itemPost">
-            {isLoadingdislikes ? (
-              "loading"
-            ) : currentUser && datadislikes?.includes(currentUser._id) ? (
-              <FavoriteOutlinedIcon
-                style={{ color: "purple", rotate: "180deg" }}
-                onClick={handleDislike}
-              />
-            ) : (
-              <FavoriteBorderOutlinedIcon
-                style={{ rotate: "180deg" }}
-                onClick={handleDislike}
+            <img src={"/upload/" + post.img} alt="" />
+            {post.vid && (
+              <Player
+                source={post.vid}
+               
               />
             )}
-            {datadislikes?.length} Dislikes
           </div>
-          <div
-            className="itemPost"
-            onClick={() => setCommentOpen(!commentOpen)}
-          >
-            <TextsmsOutlinedIcon />
-            See Comments
+          <div className="infoPost">
+            <div className="itemPost">
+              {isLoadinglikes ? (
+                "loading"
+              ) : currentUser && datalikes?.includes(currentUser._id) ? (
+                <FavoriteOutlinedIcon
+                  style={{ color: "red" }}
+                  onClick={handleLike}
+                />
+              ) : (
+                <FavoriteBorderOutlinedIcon onClick={handleLike} />
+              )}
+              {datalikes?.length} Likes
+            </div>
+            <div className="itemPost">
+              {isLoadingdislikes ? (
+                "loading"
+              ) : currentUser && datadislikes?.includes(currentUser._id) ? (
+                <FavoriteOutlinedIcon
+                  style={{ color: "purple", rotate: "180deg" }}
+                  onClick={handleDislike}
+                />
+              ) : (
+                <FavoriteBorderOutlinedIcon
+                  style={{ rotate: "180deg" }}
+                  onClick={handleDislike}
+                />
+              )}
+              {datadislikes?.length} Dislikes
+            </div>
+            <div
+              className="itemPost"
+              onClick={() => setCommentOpen(!commentOpen)}
+            >
+              <TextsmsOutlinedIcon />
+              See Comments
+            </div>
+            <div className="views">
+              <span>views: </span>
+              {post.views}
+            </div>
           </div>
-          <div className="views"><span>views: </span>{post.views}</div> 
+          {commentOpen && <Comments postId={post._id} />}
         </div>
-        {commentOpen && <Comments postId={post._id} />}
       </div>
     </div>
-  </div>
   );
 };
 

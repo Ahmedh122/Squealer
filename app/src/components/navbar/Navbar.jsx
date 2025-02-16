@@ -107,7 +107,7 @@ const Navbar = () => {
                         ) : (
                           <>
                             <div onClick={() => redirectToProfile(entry._id)}>
-                              <img src={entry.profilePic} alt="" />
+                              <img src={"/upload/" + entry.profilePic} alt="" />
                               <span>@{entry.username}</span>
                             </div>
                           </>

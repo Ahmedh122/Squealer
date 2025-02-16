@@ -1,11 +1,12 @@
 .Navbar {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #e5e5e5;
-    position: sticky;
-    top: 0;
-    background-color: white;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #e5e5e5;
+        position: sticky;
+        top: 0;
+        background-color: white;
+        z-index: 1000;
 }
 
 .leftside {
@@ -39,11 +40,12 @@
 
 .search {
     display: flex;
-    align-items: center;
-    gap: 10px;
-    border: 1px solid lightgray;
-    border-radius: 999px;
-    padding: 5px;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid lightgray;
+        border-radius: 999px;
+        padding: 5px;
+        position: relative;
 }
 
 .rightside {
@@ -90,13 +92,29 @@
         display: none;
     }
 }
-
+.dropdown {
+    
+    /* Hide the dropdown initially */
+    position: absolute;
+    /* Position absolutely within the .search container */
+    top: 100%;
+    /* Position it below the search input */
+    left: 0;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    z-index: 1000;
+    max-height: 300px;
+    /* Optional: Add a max-height and make it scrollable if there are many suggestions */
+    overflow-y: auto;
+}
 
 .dropdownrow{
-    margin: 30px 0px;
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
+    padding: 10px;
+        cursor: pointer;
+}
+.dropdownrow:hover {
+    background-color: #f1f1f1;
 }
 
 .dropdown img{

@@ -20,15 +20,22 @@ const Login = () => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      await login(inputs);
-      navigate("/");
-    } catch (err) {
-      setErr(err.response.data);
-    }
-  };
+ const handleLogin = async (e) => {
+   e.preventDefault();  
+   if (!inputs.email && !inputs.password) {
+     setErr("Email and password are required.");
+     return;
+   }
+   try {
+     await login(inputs);
+     navigate("/");
+   } catch (err) {
+     console.error("Login error:", err);
+     setErr(err.response?.data || "Login failed. Please try again.");
+   }
+
+   
+ };
   return (
     <div className="login">
       <div className="card">

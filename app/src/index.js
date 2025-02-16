@@ -4,13 +4,16 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthContextProvider } from './context/Authcontext';
+import { MuteContextProvider } from './context/Mutecontext';
 //import 'bootstrap/dist/css/bootstrap.min.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <AuthContextProvider>
+    <MuteContextProvider>
       <App />
+     </MuteContextProvider>
     </AuthContextProvider>
   </React.StrictMode>
 );

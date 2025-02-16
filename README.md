@@ -1,2 +1,0 @@
-# Squealer
-Progetto Tecnologie Web

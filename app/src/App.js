@@ -17,6 +17,7 @@ import { useContext } from "react";
 import { AuthContext } from "./context/Authcontext";
 import { QueryClient, QueryClientProvider } from "react-query";
 
+
 function App() {
 
   const {currentUser} = useContext(AuthContext);
@@ -94,7 +95,8 @@ const ProtectedRoute = ({ children }) => {
 
   return (
     <div>
-      <RouterProvider router={router} />
+      <RouterProvider router={router}/>
+     
     </div>
   );
 }
